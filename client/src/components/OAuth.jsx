@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from 'flowbite-react';
 import { AiFillGoogleCircle } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';

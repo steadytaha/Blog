@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { CircularProgressbar } from 'react-circular-progressbar';
@@ -8,14 +9,35 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import app from '../firebase';
 
-export default function CreatePost() {
+export default function UpdatePost() {
     const [file, setFile] = useState(null);
     const [imageUploadProgress, setImageUploadProgress] = useState(null);
     const [imageUploadError, setImageUploadError] = useState(null);
     const [publishError, setPublishError] = useState(null);
     const [publishSuccess, setPublishSuccess] = useState(null);
     const [formData, setFormData] = useState({});
+    const { postId } = useParams();
+    const currentUser = useSelector((state) => state.user.currentUser);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        try {
+            const fetchPost = async () => {
+                const res = await fetch(`/post/posts?postId=${postId}`);
+                const data = await res.json();
+                if (res.ok) {
+                    setFormData(data.posts[0]);
+                    setPublishError(null);
+                } else {
+                    setPublishError(data.message);
+                    return;
+                }
+            };
+            fetchPost();
+        } catch (error) {
+            console.log('Error fetching post:', error);
+        }
+    }, [postId]);
 
     const handleUploadImage = async () => {
         if (!file) {
@@ -55,8 +77,8 @@ export default function CreatePost() {
         setPublishSuccess(null);
 
         try {
-            const res = await fetch('/post/create', {
-                method: 'POST',
+            const res = await fetch(`/post/update/${formData._id}/${currentUser._id}`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -66,17 +88,17 @@ export default function CreatePost() {
             if (!res.ok) {
                 setPublishError(data.message);
             } else {
-                setPublishSuccess('Post created successfully!');
+                setPublishSuccess('Post updated successfully!');
                 setTimeout(() => navigate(`/post/${data.slug}`), 2000);
             }
         } catch (error) {
-            setPublishError('Post creation failed');
+            setPublishError('Post update failed');
         }
     };
 
     return (
         <div className="p-3 max-w-3xl mx-auto min-h-screen">
-            <h1 className="text-center text-3xl my-7 font-semibold">Create a post</h1>
+            <h1 className="text-center text-3xl my-7 font-semibold">Update a post</h1>
             <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
                 <div className="flex flex-col gap-4 sm:flex-row justify-between">
                     <TextInput
@@ -86,10 +108,12 @@ export default function CreatePost() {
                         id="title"
                         className="flex-1"
                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        value={formData.title}
                     />
                     <Select
                         required
                         onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                        value={formData.category}
                     >
                         <option value="uncategorized">Select a category</option>
                         <option value="Art">Art</option>
@@ -145,8 +169,9 @@ export default function CreatePost() {
                     placeholder="Write your post here..."
                     required
                     onChange={(value) => setFormData({ ...formData, content: value })}
+                    value={formData.content}
                 />
-                <Button type="submit" className="bg-teal-500 hover:bg-teal-600 text-white">Publish</Button>
+                <Button type="submit" className="bg-teal-500 hover:bg-teal-600 text-white">Update</Button>
                 {publishError && <Alert className="mt-5" color="failure" type="error">{publishError}</Alert>}
                 {publishSuccess && <Alert className="mt-5" color="success" type="success">{publishSuccess}</Alert>}
             </form>

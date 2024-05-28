@@ -1,4 +1,4 @@
-import { Alert, Button, Modal, TextInput, Textarea } from 'flowbite-react';
+import { Alert, Button, Modal, TextInput, Textarea, ModalBody, ModalHeader } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -186,32 +186,18 @@ export default function CommentSection({ postId }) {
           ))}
         </>
       )}
-      <Modal
-        show={showModal}
-        onClose={() => setShowModal(false)}
-        popup
-        size='md'
-      >
-        <Modal.Header />
-        <Modal.Body>
-          <div className='text-center'>
-            <HiOutlineExclamationCircle className='h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto' />
-            <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>
-              Are you sure you want to delete this comment?
-            </h3>
-            <div className='flex justify-center gap-4'>
-              <Button
-                color='failure'
-                onClick={() => handleDelete(commentToDelete)}
-              >
-                Yes, I'm sure
-              </Button>
-              <Button color='gray' onClick={() => setShowModal(false)}>
-                No, cancel
-              </Button>
+      <Modal show={showModal} onClose={()=>setShowModal(false)} popup size='md'>
+        <ModalHeader />
+          <ModalBody>
+            <div className="text-center">
+              <HiOutlineExclamationCircle className="text-red-500 text-6xl mx-auto mb-4" />
+              <h1 className="text-2xl font-semibold mx-auto mb-5">Are you sure?</h1>
+              <div className='flex justify-center gap-4'>
+                <Button color='failure' onClick={()=>handleDelete(commentToDelete)}>Yes, I'm sure</Button>
+                <Button color='gray' className='' onClick={()=>setShowModal(false)}>No, cancel</Button>
+              </div>
             </div>
-          </div>
-        </Modal.Body>
+          </ModalBody>
       </Modal>
     </div>
   );

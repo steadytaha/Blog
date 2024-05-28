@@ -193,7 +193,7 @@ export default function DashProfile() {
         <TextInput type="text" id="username" placeholder="username" defaultValue={currentUser.username} onChange={handleChange} />
         <TextInput type="email" id="email" placeholder="email" defaultValue={currentUser.email} onChange={handleChange} />
         <TextInput type="password" id="password" placeholder="password" onChange={handleChange} />
-        <Button type="submit" gradientDuoTone="purpleToBlue" outline disabled={loading || imageFileUploading}>
+        <Button type="submit" gradientDuoTone="greenToBlue" outline disabled={loading || imageFileUploading}>
           {loading ? 'Loading...' : 'Update'}
         </Button>
         {currentUser.isAdmin && (
@@ -204,7 +204,7 @@ export default function DashProfile() {
           </Link>
         )}
       </form>
-      <div className="text-red-500 flex justify-between mt-5">
+      <div className="text-red-600 flex justify-between mt-5">
         <span onClick={()=>setShowModal(true)} className="cursor-pointer">Delete Account</span>
         <span onClick={handleSignout} className="cursor-pointer">Sign Out</span>
       </div>

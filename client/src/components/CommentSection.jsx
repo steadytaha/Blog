@@ -59,7 +59,7 @@ export default function CommentSection({ postId }) {
   const handleLike = async (commentId) => {
     try {
       if (!currentUser) {
-        navigate('/sign-in');
+        navigate('/signin');
         return;
       }
       const res = await fetch(`/comment/likeComment/${commentId}`, {
@@ -113,7 +113,7 @@ export default function CommentSection({ postId }) {
   return (
     <div className='max-w-2xl mx-auto w-full p-3'>
       {currentUser ? (
-        <div className='flex items-center gap-1 my-5 text-gray-500 text-sm'>
+        <div className='flex items-center gap-1 my-5 dark:text-gray-400 text-gray-600 text-sm'>
           <p>Signed in as:</p>
           <img
             className='h-5 w-5 object-cover rounded-full'
@@ -122,15 +122,15 @@ export default function CommentSection({ postId }) {
           />
           <Link
             to={'/dashboard?tab=profile'}
-            className='text-xs text-cyan-600 hover:underline'
+            className='text-xs dark:text-teal-500 text-blue-800 hover:underline'
           >
             @{currentUser.username}
           </Link>
         </div>
       ) : (
-        <div className='text-sm text-teal-500 my-5 flex gap-1'>
+        <div className='text-sm text-blue-800 dark:text-teal-500 my-5 flex gap-1'>
           You must be signed in to comment.
-          <Link className='text-blue-500 hover:underline' to={'/sign-in'}>
+          <Link className='text-blue-500 hover:underline' to={'/signin'}>
             Sign In
           </Link>
         </div>
@@ -138,7 +138,7 @@ export default function CommentSection({ postId }) {
       {currentUser && (
         <form
           onSubmit={handleSubmit}
-          className='border border-teal-500 rounded-md p-3'
+          className='border border-blue-500 rounded-md p-3'
         >
           <Textarea
             placeholder='Add a comment...'

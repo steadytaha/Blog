@@ -113,7 +113,7 @@ export default function CreatePost() {
                         <option value="Other">Other</option>
                     </Select>
                 </div>
-                <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
+                <div className="flex gap-4 items-center justify-between border-4 border-green-700 border-dotted p-3 dark:border-teal-500">
                     <FileInput
                         type="file"
                         id="image"
@@ -122,7 +122,7 @@ export default function CreatePost() {
                     />
                     <Button
                         type="button"
-                        className="bg-teal-500 hover:bg-teal-600 text-white"
+                        className="bg-green-700 hover:bg-green-800 text-white"
                         onClick={handleUploadImage}
                         disabled={imageUploadProgress}
                     >
@@ -146,7 +146,7 @@ export default function CreatePost() {
                     required
                     onChange={(value) => setFormData({ ...formData, content: value })}
                 />
-                <Button type="submit" className="bg-teal-500 hover:bg-teal-600 text-white">Publish</Button>
+                <Button type="submit" className="bg-green-700 hover:bg-green-800 text-white">Publish</Button>
                 {publishError && <Alert className="mt-5" color="failure" type="error">{publishError}</Alert>}
                 {publishSuccess && <Alert className="mt-5" color="success" type="success">{publishSuccess}</Alert>}
             </form>

@@ -6,25 +6,24 @@ import { HiBan, HiCheck, HiOutlineExclamationCircle } from 'react-icons/hi';
 export default function DashUsers() {
   const currentUser = useSelector((state) => state.user.currentUser);
   const [users, setUsers] = useState([]);
-  const [showMore, setShowMore] = useState(true);
+  const [showMore, setShowMore] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     const getUsers = async () => {
       try {
-        const response = await fetch(`/user/users`);
+        const response = await fetch(`/user/users?startIndex=0&limit=9`);
         const data = await response.json();
         if (response.ok) {
           setUsers(data.users);
-          if (data.users.length < 10) {
-            setShowMore(false);
-          }
+          setShowMore(data.users.length === 9); 
         }
       } catch (error) {
         console.error('Error fetching users:', error);
       }
     };
+
     if (currentUser.isAdmin) {
       getUsers();
     }
@@ -33,13 +32,11 @@ export default function DashUsers() {
   const handleShowMore = async () => {
     const startIndex = users.length;
     try {
-      const res = await fetch(`/user/users?startIndex=${startIndex}`);
+      const res = await fetch(`/user/users?startIndex=${startIndex}&limit=9`);  parameter
       const data = await res.json();
       if (res.ok) {
-        setUsers((prevPosts) => [...prevPosts, ...data.users]);
-        if (data.users.length < 10) {
-          setShowMore(false);
-        }
+        setUsers((prevUsers) => [...prevUsers, ...data.users]);
+        setShowMore(data.users.length === 9); 
       }
     } catch (error) {
       console.error('Error fetching more users:', error);
@@ -81,11 +78,9 @@ export default function DashUsers() {
                   <TableCell>
                     <img src={user.photo} alt={user.username} className='w-10 h-10 bg-gray-500 rounded-full' />
                   </TableCell>
-                  <TableCell>
-                    {user.username}
-                  </TableCell>
+                  <TableCell>{user.username}</TableCell>
                   <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.isAdmin ? (<HiCheck className='text-green-500 w-5 h-5'/>) : (<HiBan className='text-red-500 w-5 h-5'/>)}</TableCell>
+                  <TableCell>{user.isAdmin ? (<HiCheck className='text-green-500 w-5 h-5' />) : (<HiBan className='text-red-500 w-5 h-5' />)}</TableCell>
                   <TableCell>
                     <span onClick={() => { setShowModal(true); setUserId(user._id); }} className='font-medium text-red-500 hover:underline cursor-pointer'>Delete</span>
                   </TableCell>

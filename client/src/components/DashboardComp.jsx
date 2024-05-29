@@ -120,7 +120,7 @@ export default function DashboardComp() {
           </div>
         </div>
       </div>
-      <div className='flex flex-wrap gap-4 py-3 mx-auto justify-center'>
+      <div className='flex flex-wrap gap-1 py-3 mx-auto justify-center'>
         <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800'>
           <div className='flex justify-between  p-3 text-sm font-semibold'>
             <h1 className='text-center p-2'>Recent users</h1>
@@ -139,7 +139,7 @@ export default function DashboardComp() {
                   <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
                     <Table.Cell>
                       <img
-                        src={user.profilePicture}
+                        src={user.photo}
                         alt='user'
                         className='w-10 h-10 rounded-full bg-gray-500'
                       />
@@ -166,7 +166,7 @@ export default function DashboardComp() {
               comments.map((comment) => (
                 <Table.Body key={comment._id} className='divide-y'>
                   <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
-                    <Table.Cell className='w-96'>
+                    <Table.Cell className='w-60'>
                         <p className='line-clamp-2'>{comment.content}</p>
                     </Table.Cell>
                     <Table.Cell>{comment.numberOfLikes}</Table.Cell>
@@ -199,7 +199,7 @@ export default function DashboardComp() {
                         className='w-14 h-10 rounded-md bg-gray-500'
                       />
                     </Table.Cell>
-                    <Table.Cell className='w-96'>{post.title}</Table.Cell>
+                    <Table.Cell className='w-80'>{post.title}</Table.Cell>
                     <Table.Cell className='w-5'>{post.category}</Table.Cell>
                   </Table.Row>
                 </Table.Body>

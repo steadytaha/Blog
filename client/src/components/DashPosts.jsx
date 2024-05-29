@@ -7,25 +7,24 @@ import { HiOutlineExclamationCircle } from 'react-icons/hi';
 export default function DashPosts() {
   const currentUser = useSelector((state) => state.user.currentUser);
   const [userPosts, setUserPosts] = useState([]);
-  const [showMore, setShowMore] = useState(true);
+  const [showMore, setShowMore] = useState(false);  // Start with false to avoid showing the button prematurely
   const [showModal, setShowModal] = useState(false);
   const [postId, setPostId] = useState(null);
 
   useEffect(() => {
     const getPosts = async () => {
       try {
-        const response = await fetch(`/post/posts`);
+        const response = await fetch(`/post/posts?startIndex=0&limit=10`);  // Ensure limit parameter is set
         const data = await response.json();
         if (response.ok) {
           setUserPosts(data.posts);
-          if (data.posts.length <= 9) {
-            setShowMore(false);
-          }
+          setShowMore(data.posts.length === 10);  // Show 'Show More' only if 10 posts are fetched
         }
       } catch (error) {
         console.error('Error fetching posts:', error);
       }
     };
+
     if (currentUser.isAdmin) {
       getPosts();
     }
@@ -34,13 +33,11 @@ export default function DashPosts() {
   const handleShowMore = async () => {
     const startIndex = userPosts.length;
     try {
-      const res = await fetch(`/post/posts?author=${currentUser._id}&startIndex=${startIndex}`);
+      const res = await fetch(`/post/posts?startIndex=${startIndex}&limit=10`);  // Ensure limit parameter is set
       const data = await res.json();
       if (res.ok) {
         setUserPosts((prevPosts) => [...prevPosts, ...data.posts]);
-        if (data.posts.length <= 9) {
-          setShowMore(false);
-        }
+        setShowMore(data.posts.length === 10);  // Update 'Show More' visibility
       }
     } catch (error) {
       console.error('Error fetching more posts:', error);

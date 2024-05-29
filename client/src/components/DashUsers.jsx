@@ -6,18 +6,18 @@ import { HiBan, HiCheck, HiOutlineExclamationCircle } from 'react-icons/hi';
 export default function DashUsers() {
   const currentUser = useSelector((state) => state.user.currentUser);
   const [users, setUsers] = useState([]);
-  const [showMore, setShowMore] = useState(false);
+  const [showMore, setShowMore] = useState(false); // Default to false
   const [showModal, setShowModal] = useState(false);
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     const getUsers = async () => {
       try {
-        const response = await fetch(`/user/users?startIndex=0&limit=9`);
+        const response = await fetch(`/user/users?startIndex=0&limit=10`); // Include limit parameter
         const data = await response.json();
         if (response.ok) {
           setUsers(data.users);
-          setShowMore(data.users.length === 9); 
+          setShowMore(data.users.length === 10); // Show more if 10 users are fetched
         }
       } catch (error) {
         console.error('Error fetching users:', error);
@@ -32,11 +32,11 @@ export default function DashUsers() {
   const handleShowMore = async () => {
     const startIndex = users.length;
     try {
-      const res = await fetch(`/user/users?startIndex=${startIndex}&limit=9`);  parameter
+      const res = await fetch(`/user/users?startIndex=${startIndex}&limit=10`); // Include limit parameter
       const data = await res.json();
       if (res.ok) {
         setUsers((prevUsers) => [...prevUsers, ...data.users]);
-        setShowMore(data.users.length === 9); 
+        setShowMore(data.users.length === 10); // Update show more visibility
       }
     } catch (error) {
       console.error('Error fetching more users:', error);

@@ -7,7 +7,7 @@ export default function Search() {
   const [sidebarData, setSidebarData] = useState({
     searchTerm: '',
     sort: 'desc',
-    category: 'uncategorized',
+    category: '',
   });
 
   const [posts, setPosts] = useState([]);
@@ -20,17 +20,14 @@ export default function Search() {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
-    const searchTermFromUrl = urlParams.get('searchTerm');
-    const sortFromUrl = urlParams.get('sort');
-    const categoryFromUrl = urlParams.get('category');
-    if (searchTermFromUrl || sortFromUrl || categoryFromUrl) {
-      setSidebarData({
-        ...sidebarData,
-        searchTerm: searchTermFromUrl,
-        sort: sortFromUrl,
-        category: categoryFromUrl,
-      });
-    }
+    const searchTermFromUrl = urlParams.get('searchTerm') || '';
+    const sortFromUrl = urlParams.get('sort') || 'desc';
+    const categoryFromUrl = urlParams.get('category') || '';
+    setSidebarData({
+      searchTerm: searchTermFromUrl,
+      sort: sortFromUrl,
+      category: categoryFromUrl,
+    });
 
     const fetchPosts = async () => {
       setLoading(true);
@@ -55,25 +52,19 @@ export default function Search() {
   }, [location.search]);
 
   const handleChange = (e) => {
-    if (e.target.id === 'searchTerm') {
-      setSidebarData({ ...sidebarData, searchTerm: e.target.value });
-    }
-    if (e.target.id === 'sort') {
-      const order = e.target.value || 'desc';
-      setSidebarData({ ...sidebarData, sort: order });
-    }
-    if (e.target.id === 'category') {
-      const category = e.target.value || 'uncategorized';
-      setSidebarData({ ...sidebarData, category });
-    }
+    const { id, value } = e.target;
+    setSidebarData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const urlParams = new URLSearchParams(location.search);
-    urlParams.set('searchTerm', sidebarData.searchTerm);
-    urlParams.set('sort', sidebarData.sort);
-    urlParams.set('category', sidebarData.category);
+    const urlParams = new URLSearchParams();
+    if (sidebarData.searchTerm) urlParams.set('searchTerm', sidebarData.searchTerm);
+    if (sidebarData.sort) urlParams.set('sort', sidebarData.sort);
+    if (sidebarData.category) urlParams.set('category', sidebarData.category);
     const searchQuery = urlParams.toString();
     navigate(`/search?${searchQuery}`);
   };
@@ -103,10 +94,8 @@ export default function Search() {
     <div className='flex flex-col md:flex-row'>
       <div className='p-7 border-b md:border-r md:min-h-screen border-gray-500'>
         <form className='flex flex-col gap-8' onSubmit={handleSubmit}>
-          <div className='flex   items-center gap-2'>
-            <label className='whitespace-nowrap font-semibold'>
-              Search Term:
-            </label>
+          <div className='flex items-center gap-2'>
+            <label className='whitespace-nowrap font-semibold'>Search Term:</label>
             <TextInput
               placeholder='Search...'
               id='searchTerm'
@@ -124,31 +113,27 @@ export default function Search() {
           </div>
           <div className='flex items-center gap-2'>
             <label className='font-semibold'>Category:</label>
-            <Select
-              onChange={handleChange}
-              value={sidebarData.category}
-              id='category'>
-
-                <option value="uncategorized">Uncategorized</option>
-                <option value="Art">Art</option>
-                <option value="Books">Books</option>
-                <option value="Business">Business</option>
-                <option value="Education">Education</option>
-                <option value="Entertainment">Entertainment</option>
-                <option value="Fashion">Fashion</option>
-                <option value="Food">Food</option>
-                <option value="Gaming">Gaming</option>
-                <option value="General">General</option>
-                <option value="Health">Health</option>
-                <option value="Lifestyle">Lifestyle</option>
-                <option value="Movies">Movies</option>
-                <option value="Music">Music</option>
-                <option value="Politics">Politics</option>
-                <option value="Science">Science</option>
-                <option value="Sports">Sports</option>
-                <option value="Technology">Technology</option>
-                <option value="Travel">Travel</option>
-                <option value="Other">Other</option>
+            <Select onChange={handleChange} value={sidebarData.category} id='category'>
+              <option value=''>All Categories</option>
+              <option value='Art'>Art</option>
+              <option value='Books'>Books</option>
+              <option value='Business'>Business</option>
+              <option value='Education'>Education</option>
+              <option value='Entertainment'>Entertainment</option>
+              <option value='Fashion'>Fashion</option>
+              <option value='Food'>Food</option>
+              <option value='Gaming'>Gaming</option>
+              <option value='General'>General</option>
+              <option value='Health'>Health</option>
+              <option value='Lifestyle'>Lifestyle</option>
+              <option value='Movies'>Movies</option>
+              <option value='Music'>Music</option>
+              <option value='Politics'>Politics</option>
+              <option value='Science'>Science</option>
+              <option value='Sports'>Sports</option>
+              <option value='Technology'>Technology</option>
+              <option value='Travel'>Travel</option>
+              <option value='Other'>Other</option>
             </Select>
           </div>
           <Button type='submit' outline gradientDuoTone='purpleToPink'>
@@ -157,7 +142,7 @@ export default function Search() {
         </form>
       </div>
       <div className='w-full'>
-        <h1 className='text-3xl font-semibold sm:border-b border-gray-500 p-3 mt-5 '>
+        <h1 className='text-3xl font-semibold sm:border-b border-gray-500 p-3 mt-5'>
           Posts results:
         </h1>
         <div className='p-7 flex flex-wrap gap-4'>

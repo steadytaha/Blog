@@ -86,7 +86,7 @@ export const deleteComment = async (req, res, next) => {
     if (!comment) {
       return next(errorHandler(404, 'Comment not found'));
     }
-    if (comment.userId !== req.user.id && !req.user.isAdmin) {
+    if (comment.userId !== req.user.id && !req.user.isAdmin && req.user.role !== 'writer') {
       return next(
         errorHandler(403, 'You are not allowed to delete this comment')
       );
@@ -104,7 +104,7 @@ export const getComments = async (req, res, next) => {
   try {
     const startIndex = parseInt(req.query.startIndex) || 0;
     const limit = parseInt(req.query.limit) || 9;
-    const sortDirection = req.query.sort === 'desc' ? -1 : 1;
+    const sortDirection = req.query.sort === 'asc' ? -1 : 1;
     const comments = await Comment.find()
       .sort({ createdAt: sortDirection })
       .skip(startIndex)

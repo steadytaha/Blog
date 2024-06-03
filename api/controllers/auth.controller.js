@@ -43,7 +43,7 @@ export const signin = async (req, res, next) => {
             return next(errorHandler(400, "Invalid password"));
         }
         const { password: hashedPassword, ...rest } = validUser._doc;
-        const token = jwt.sign({ id: validUser._id, isAdmin: validUser.isAdmin }, process.env.JWT_SECRET, { expiresIn: "1d" });
+        const token = jwt.sign({ id: validUser._id, isAdmin: validUser.isAdmin, role: validUser.role }, process.env.JWT_SECRET, { expiresIn: "1d" });
         res.status(200).cookie('token', token, { httpOnly: true }).json(rest);
     } catch (error) {
         next(error);
@@ -55,7 +55,7 @@ export const google = async (req, res, next) => {
     try {
         const user = await User.findOne({email});
         if (user) {
-            const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: "1d" });
+            const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin, role: validUser.role }, process.env.JWT_SECRET, { expiresIn: "1d" });
             const {password, ...rest} = user._doc;
             res.status(200).cookie('token', token, { httpOnly: true }).json(rest);
         } else {

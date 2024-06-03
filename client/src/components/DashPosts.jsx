@@ -7,25 +7,38 @@ import { HiOutlineExclamationCircle } from 'react-icons/hi';
 export default function DashPosts() {
   const currentUser = useSelector((state) => state.user.currentUser);
   const [userPosts, setUserPosts] = useState([]);
-  const [showMore, setShowMore] = useState(false);  // Start with false to avoid showing the button prematurely
+  const [showMore, setShowMore] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [postId, setPostId] = useState(null);
 
   useEffect(() => {
     const getPosts = async () => {
-      try {
-        const response = await fetch(`/post/posts?startIndex=0&limit=10`);  // Ensure limit parameter is set
-        const data = await response.json();
-        if (response.ok) {
-          setUserPosts(data.posts);
-          setShowMore(data.posts.length === 10);  // Show 'Show More' only if 10 posts are fetched
+      if(currentUser.isAdmin) {
+        try {
+          const response = await fetch(`/post/posts?startIndex=0&limit=10`);
+          const data = await response.json();
+          if (response.ok) {
+            setUserPosts(data.posts);
+            setShowMore(data.posts.length === 10);
+          }
+        } catch (error) {
+          console.error('Error fetching posts:', error);
         }
-      } catch (error) {
-        console.error('Error fetching posts:', error);
+      } else if (currentUser.role === "writer") {
+        try {
+          const response = await fetch(`/post/posts?author=${currentUser._id}`);
+          const data = await response.json();
+          if (response.ok) {
+            setUserPosts(data.posts);
+            setShowMore(data.posts.length === 10);
+          }
+        } catch (error) {
+          console.error('Error fetching posts:', error);
+        }
       }
     };
 
-    if (currentUser.isAdmin) {
+    if (currentUser.isAdmin || currentUser.role === "writer") {
       getPosts();
     }
   }, [currentUser._id, currentUser.isAdmin]);
@@ -37,7 +50,7 @@ export default function DashPosts() {
       const data = await res.json();
       if (res.ok) {
         setUserPosts((prevPosts) => [...prevPosts, ...data.posts]);
-        setShowMore(data.posts.length === 10);  // Update 'Show More' visibility
+        setShowMore(data.posts.length === 10);
       }
     } catch (error) {
       console.error('Error fetching more posts:', error);
@@ -61,7 +74,7 @@ export default function DashPosts() {
 
   return (
     <div className='w-full overflow-x-auto md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
-      {currentUser.isAdmin && userPosts.length > 0 ? (
+      {(currentUser.isAdmin || currentUser.role === "writer") && userPosts.length > 0 ? (
         <>
           <Table hoverable className='min-w-full shadow-md'>
             <TableHead>

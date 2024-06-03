@@ -100,3 +100,34 @@ export const getUser = async (req, res, next) => {
       next(error);
     }
 };
+
+export const setUserRole = async (req, res, next) => {
+    if (!req.user.isAdmin) {
+      return next(errorHandler(403, 'You are not allowed to change user roles'));
+    }
+  
+    const updateData = {};
+    if (req.body.role) {
+      updateData.role = req.body.role;
+    }
+    if (req.body.isAdmin !== undefined) {
+      updateData.isAdmin = req.body.isAdmin;
+    }
+  
+    try {
+      const updatedUser = await User.findByIdAndUpdate(
+        req.params.userId,
+        { $set: updateData },
+        { new: true }
+      );
+  
+      if (!updatedUser) {
+        return next(errorHandler(404, 'User not found'));
+      }
+  
+      const { password, ...rest } = updatedUser._doc;
+      res.status(200).json(rest);
+    } catch (error) {
+      next(error);
+    }
+};

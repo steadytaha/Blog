@@ -23,7 +23,11 @@ const userSchema = new mongoose.Schema({
     isAdmin: {
         type: Boolean,
         default: false
-    }
+    },
+    role: {
+        type: String,
+        default: ""
+    },
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);

@@ -40,27 +40,29 @@ export default function DashSidebar() {
         <SidebarItems>
             <SidebarItemGroup className='flex flex-col gap-0.5'>
                 {currentUser && currentUser.isAdmin && (
-                    <Link to='/dashboard?tab=dash'>
-                        <Sidebar.Item active={tab === 'dash' || !tab} icon={HiChartPie} as='div'>
-                            Dashboard
-                        </Sidebar.Item>
-                    </Link>
-                )}
-                <Link to='/dashboard?tab=profile'>
-                    <SidebarItem active={tab === 'profile'} icon={HiUser} label={currentUser.isAdmin ? 'Admin' : 'User'} labelColor='dark' as='div'>
-                        Profile
-                    </SidebarItem>
-                </Link>
-                {currentUser.isAdmin && (
                     <>
-                        <Link to='/dashboard?tab=posts'>
-                            <SidebarItem active={tab === 'posts'} icon={HiDocumentText} as='div'>
-                                Posts
-                            </SidebarItem>
+                        <Link to='/dashboard?tab=dash'>
+                            <Sidebar.Item active={tab === 'dash' || !tab} icon={HiChartPie} as='div'>
+                                Dashboard
+                            </Sidebar.Item>
                         </Link>
                         <Link to='/dashboard?tab=users'>
                             <SidebarItem active={tab === 'users'} icon={HiOutlineUserGroup} as='div'>
                                 Users
+                            </SidebarItem>
+                        </Link>
+                    </>
+                )}
+                <Link to='/dashboard?tab=profile'>
+                    <SidebarItem active={tab === 'profile'} icon={HiUser} label={currentUser.role ? currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1) : currentUser.isAdmin ? 'Admin' : 'User'} labelColor='dark' as='div'>
+                        Profile
+                    </SidebarItem>
+                </Link>
+                {(currentUser.isAdmin || currentUser.role === "writer") && (
+                    <>
+                        <Link to='/dashboard?tab=posts'>
+                            <SidebarItem active={tab === 'posts'} icon={HiDocumentText} as='div'>
+                                Posts
                             </SidebarItem>
                         </Link>
                         <Link to='/dashboard?tab=comments'>

@@ -2,7 +2,6 @@ import { Modal, Table, Button, ModalHeader, ModalBody } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
-import { FaCheck, FaTimes } from 'react-icons/fa';
 
 export default function DashComments() {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -13,22 +12,41 @@ export default function DashComments() {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await fetch(`/comment/getComments`);
-        const data = await res.json();
-        if (res.ok) {
-          setComments(data.comments);
-          if (data.comments.length < 9) {
-            setShowMore(false);
+        if (currentUser.isAdmin) {
+          const res = await fetch('/comment/getComments');
+          const data = await res.json();
+          if (res.ok) {
+            setComments(data.comments);
+            if (data.comments.length < 9) {
+              setShowMore(false);
+            }
+          }
+        } else if (currentUser.role === 'writer') {
+          const postsRes = await fetch(`/post/posts?author=${currentUser._id}`);
+          const postData = await postsRes.json();
+          console.log(postData);
+          if (postsRes.ok) {
+            const commentsPromises = postData.posts.map((post) =>
+              fetch(`/comment/getPostComments/${post._id}`).then((res) => res.json())
+            );
+            console.log(commentsPromises);
+            const commentsData = await Promise.all(commentsPromises);
+            const allComments = commentsData.flatMap((data) => data);
+            setComments(allComments);
+            if (allComments.length < 9) {
+              setShowMore(false);
+            }
           }
         }
       } catch (error) {
         console.log(error.message);
       }
     };
-    if (currentUser.isAdmin) {
+
+    if (currentUser.isAdmin || currentUser.role === 'writer') {
       fetchComments();
     }
-  }, [currentUser._id]);
+  }, [currentUser.isAdmin, currentUser.role, currentUser._id]);
 
   const handleShowMore = async () => {
     const startIndex = comments.length;
@@ -73,7 +91,7 @@ export default function DashComments() {
 
   return (
     <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
-      {currentUser.isAdmin && comments.length > 0 ? (
+      {(currentUser.isAdmin || currentUser.role === "writer") && comments.length > 0 ? (
         <>
           <Table hoverable className='shadow-md'>
             <Table.Head>

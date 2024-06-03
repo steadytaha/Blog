@@ -25,6 +25,10 @@ export default function Header() {
         }
       }, [location.search]);
 
+    useEffect(() => {
+        setSearchTerm('');
+    }, [location.pathname]);
+
     const handleSignout = async () => {
         try {
           const res = await fetch('/user/signout', {
@@ -33,6 +37,7 @@ export default function Header() {
           const data = await res.json();
           if (res.ok) {
             dispatch(signOutSuccess());
+            setSearchTerm('');
           } else {
             console.log(data.message);
           }
@@ -47,6 +52,7 @@ export default function Header() {
         urlParams.set('searchTerm', searchTerm);
         const searchQuery = urlParams.toString();
         navigate(`/search?${searchQuery}`);
+        setSearchTerm('');
       };
 
   return (

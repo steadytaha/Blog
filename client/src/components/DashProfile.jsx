@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 import app from '../firebase.js';
+import { debug } from '../utils/debug.js';
 
 export default function DashProfile() {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -139,10 +140,10 @@ export default function DashProfile() {
       if (res.ok) {
         dispatch(signOutSuccess());
       } else {
-        console.log(data.message);
+        debug.error(data.message);
       }
     } catch (error) {
-      console.log(error.message);
+      debug.error(error.message);
     }
   }
 

@@ -1,9 +1,11 @@
 import { Button, Spinner } from 'flowbite-react';
 import { useEffect, useState, useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { BsToggle2On } from 'react-icons/bs';
 import CallToAction from '../components/CallToAction';
 import CommentSection from '../components/CommentSection';
 import PostCard from '../components/PostCard';
+import { debug } from '../utils/debug';
 
 export default function PostPage() {
   const { postId } = useParams();
@@ -51,7 +53,7 @@ export default function PostPage() {
         const data = await res.json();
         setCreator(data);
       } catch (error) {
-        console.log(error.message);
+        debug.error(error.message);
       }
     };
     fetchCreator();
@@ -74,11 +76,24 @@ export default function PostPage() {
   }
 
   return (
-    <main className="p-3 flex flex-col max-w-6xl mx-auto min-h-screen">
+    <main className="p-3 flex flex-col max-w-6xl mx-auto min-h-screen relative">
+      {/* Switch to Modern Version Toggle */}
+      <div className="absolute top-4 right-4 z-20">
+        <Link 
+          to={`/modern-post/${postId}`}
+          className="flex items-center gap-3 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-full transition-all duration-300 group bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 shadow-lg"
+        >
+          <span className="text-sm font-light text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-300">
+            Switch to Modern
+          </span>
+          <BsToggle2On className="text-xl text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-300" />
+        </Link>
+      </div>
+      
       <h1 className="text-3xl mt-10 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl">
         {post && post.title}
       </h1>
-      <Link to={`/search?category=${post && post.category}`} className="self-center mt-5">
+      <Link to={`/modern-search?category=${post && post.category}`} className="self-center mt-5">
         <Button color="gray" pill size="xs">
           {post && post.category}
         </Button>

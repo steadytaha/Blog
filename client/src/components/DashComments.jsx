@@ -2,6 +2,7 @@ import { Modal, Table, Button, ModalHeader, ModalBody } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
+import { debug } from '../utils/debug';
 
 export default function DashComments() {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -24,12 +25,12 @@ export default function DashComments() {
         } else if (currentUser.role === 'writer') {
           const postsRes = await fetch(`/post/posts?author=${currentUser._id}`);
           const postData = await postsRes.json();
-          console.log(postData);
+          debug.log(postData);
           if (postsRes.ok) {
             const commentsPromises = postData.posts.map((post) =>
               fetch(`/comment/getPostComments/${post._id}`).then((res) => res.json())
             );
-            console.log(commentsPromises);
+            debug.log(commentsPromises);
             const commentsData = await Promise.all(commentsPromises);
             const allComments = commentsData.flatMap((data) => data);
             setComments(allComments);
@@ -39,7 +40,7 @@ export default function DashComments() {
           }
         }
       } catch (error) {
-        console.log(error.message);
+        debug.error(error.message);
       }
     };
 
@@ -62,7 +63,7 @@ export default function DashComments() {
         }
       }
     } catch (error) {
-      console.log(error.message);
+      debug.error(error.message);
     }
   };
 
@@ -82,10 +83,10 @@ export default function DashComments() {
         );
         setShowModal(false);
       } else {
-        console.log(data.message);
+        debug.error(data.message);
       }
     } catch (error) {
-      console.log(error.message);
+      debug.error(error.message);
     }
   };
 

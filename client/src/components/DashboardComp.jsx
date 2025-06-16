@@ -8,6 +8,7 @@ import {
 } from 'react-icons/hi';
 import { Button, Table } from 'flowbite-react';
 import { Link } from 'react-router-dom';
+import { debug } from '../utils/debug';
 
 export default function DashboardComp() {
   const [users, setUsers] = useState([]);
@@ -31,7 +32,7 @@ export default function DashboardComp() {
           setLastMonthUsers(data.lastMonthUsers);
         }
       } catch (error) {
-        console.log(error.message);
+        debug.error(error.message);
       }
     };
     const fetchPosts = async () => {
@@ -44,7 +45,7 @@ export default function DashboardComp() {
           setLastMonthPosts(data.lastMonthPosts);
         }
       } catch (error) {
-        console.log(error.message);
+        debug.error(error.message);
       }
     };
     const fetchComments = async () => {
@@ -57,7 +58,7 @@ export default function DashboardComp() {
           setLastMonthComments(data.lastMonthComments);
         }
       } catch (error) {
-        console.log(error.message);
+        debug.error(error.message);
       }
     };
     if (currentUser.isAdmin) {

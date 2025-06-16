@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { FaThumbsUp } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { Button, Textarea } from 'flowbite-react';
+import { debug } from '../utils/debug';
 
 export default function Comment({ comment, onLike, onEdit, onDelete }) {
   const [user, setUser] = useState({});
@@ -18,7 +19,7 @@ export default function Comment({ comment, onLike, onEdit, onDelete }) {
           setUser(data);
         }
       } catch (error) {
-        console.log(error.message);
+        debug.error(error.message);
       }
     };
     getUser();
@@ -45,7 +46,7 @@ export default function Comment({ comment, onLike, onEdit, onDelete }) {
         onEdit(comment, editedContent);
       }
     } catch (error) {
-      console.log(error.message);
+      debug.error(error.message);
     }
   };
   return (

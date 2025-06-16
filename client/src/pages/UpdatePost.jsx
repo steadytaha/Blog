@@ -8,6 +8,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import app from '../firebase';
+import { debug } from '../utils/debug';
 
 export default function UpdatePost() {
     const [file, setFile] = useState(null);
@@ -35,7 +36,7 @@ export default function UpdatePost() {
             };
             fetchPost();
         } catch (error) {
-            console.log('Error fetching post:', error);
+            debug.error('Error fetching post:', error);
         }
     }, [postId]);
 

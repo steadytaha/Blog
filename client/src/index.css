@@ -4,8 +4,48 @@
 
 body {
     height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
 }
 
+/* Modern Home Specific Styles */
+.modern-title {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 900;
+    letter-spacing: -0.05em;
+    line-height: 0.8;
+}
+
+@media (max-width: 768px) {
+    .modern-title {
+        font-size: 4rem !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .modern-title {
+        font-size: 3rem !important;
+    }
+}
+
+/* Custom scrollbar for modern design */
+.modern-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.modern-scrollbar::-webkit-scrollbar-track {
+    background: #111;
+}
+
+.modern-scrollbar::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 2px;
+}
+
+.modern-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Existing styles */
 .ql-editor {
     font-size: 1.05rem;
 }

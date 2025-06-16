@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useEffect, useState } from 'react';
 import { toggleTheme } from '../redux/theme/themeSlice.js'
 import { signOutSuccess } from '../redux/user/userSlice.js'
+import { debug } from '../utils/debug.js';
 
 
 export default function Header() {
@@ -39,10 +40,10 @@ export default function Header() {
             dispatch(signOutSuccess());
             setSearchTerm('');
           } else {
-            console.log(data.message);
+            debug.error(data.message);
           }
         } catch (error) {
-          console.log(error.message);
+          debug.error(error.message);
         }
     }
 
@@ -120,7 +121,7 @@ export default function Header() {
                         About
                     </Link>
                 </Navbar.Link>
-                <Navbar.Link active = {path === '/projects'} as = {'div'}>
+                <Navbar.Link active = {path === '/projects' || path === '/modern-projects'} as = {'div'}>
                     <Link to='/projects'>
                         Projects
                     </Link>

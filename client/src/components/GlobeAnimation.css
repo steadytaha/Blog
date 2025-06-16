@@ -1,0 +1,150 @@
+/* 
+  GlobeAnimation.css
+  Improved and themable version of the provided animation.
+*/
+
+/* Using CSS variables for easy theming */
+:root {
+  --globe-wire-color-light: rgba(0, 0, 0, 0.1);
+  --orbit-ring-color-light: rgba(0, 0, 0, 0.15);
+  --orbit-dot-color-light: #000000;
+  --sparkle-color-light: #000000;
+  
+  --globe-wire-color-dark: rgba(255, 255, 255, 0.1);
+  --orbit-ring-color-dark: rgba(255, 255, 255, 0.15);
+  --orbit-dot-color-dark: #ffffff;
+  --sparkle-color-dark: #ffffff;
+}
+
+.globe-animation-container[data-theme='light'] {
+  --globe-wire-color: var(--globe-wire-color-light);
+  --orbit-ring-color: var(--orbit-ring-color-light);
+  --orbit-dot-color: var(--orbit-dot-color-light);
+  --sparkle-color: var(--sparkle-color-light);
+}
+
+.globe-animation-container[data-theme='dark'] {
+  --globe-wire-color: var(--globe-wire-color-dark);
+  --orbit-ring-color: var(--orbit-ring-color-dark);
+  --orbit-dot-color: var(--orbit-dot-color-dark);
+  --sparkle-color: var(--sparkle-color-dark);
+}
+
+.globe-animation-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  animation: fadeIn 2s ease 0.5s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.mouse-glow {
+    position: absolute;
+    inset: 0;
+    transition: background 0.4s ease-out;
+}
+
+/* Globe Container */
+.globe-container {
+  width: 300px;
+  height: 300px;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: globeRotate 35s linear infinite;
+}
+
+@keyframes globeRotate {
+  from { transform: rotateY(0deg) rotateX(10deg); }
+  to { transform: rotateY(360deg) rotateX(10deg); }
+}
+
+/* Globe Wireframe Lines */
+.globe-wire {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--globe-wire-color);
+  border-radius: 50%;
+  transition: border-color 0.5s ease;
+}
+
+.globe-wire:nth-child(1) { transform: rotateY(0deg); }
+.globe-wire:nth-child(2) { transform: rotateY(30deg); }
+.globe-wire:nth-child(3) { transform: rotateY(60deg); }
+.globe-wire:nth-child(4) { transform: rotateY(90deg); }
+.globe-wire:nth-child(5) { transform: rotateY(120deg); }
+.globe-wire:nth-child(6) { transform: rotateY(150deg); }
+.globe-wire:nth-child(7) { transform: rotateX(90deg) rotateY(0deg); }
+.globe-wire:nth-child(8) { transform: rotateX(90deg) rotateY(60deg); }
+.globe-wire:nth-child(9) { transform: rotateX(90deg) rotateY(120deg); }
+
+/* Orbital Ring */
+.orbit-ring {
+  position: absolute;
+  width: 450px;
+  height: 450px;
+  border: 1px solid var(--orbit-ring-color);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotateX(75deg);
+  animation: orbitRotate 25s linear infinite;
+  transition: border-color 0.5s ease;
+}
+
+@keyframes orbitRotate {
+  from { transform: translate(-50%, -50%) rotateX(75deg) rotateZ(0deg); }
+  to { transform: translate(-50%, -50%) rotateX(75deg) rotateZ(360deg); }
+}
+
+/* Orbiting Dot */
+.orbit-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--orbit-dot-color);
+  border-radius: 50%;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 12px var(--orbit-dot-color);
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+/* Sparkle Stars */
+.sparkle {
+  position: absolute;
+  animation: twinkle 4s ease-in-out infinite;
+  top: 50%;
+  left: 50%;
+}
+
+.sparkle::before {
+  content: '✦';
+  color: var(--sparkle-color);
+  font-size: 14px;
+  transition: color 0.5s ease;
+}
+
+.sparkle:nth-child(1) { transform: translate(-80px, -50px); animation-delay: 0s; }
+.sparkle:nth-child(2) { transform: translate(40px, 80px); animation-delay: 1.5s; }
+.sparkle:nth-child(3) { transform: translate(90px, -30px); animation-delay: 3s; }
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0; transform-origin: center; transform: scale(0.7); }
+  50% { opacity: 1; transform-origin: center; transform: scale(1.1); }
+} 

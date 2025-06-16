@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import Comment from './Comment.jsx';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
+import { debug } from '../utils/debug.js';
 
 export default function CommentSection({ postId }) {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -50,7 +51,7 @@ export default function CommentSection({ postId }) {
           setComments(data);
         }
       } catch (error) {
-        console.log(error.message);
+        debug.error(error.message);
       }
     };
     getComments();
@@ -80,7 +81,7 @@ export default function CommentSection({ postId }) {
         );
       }
     } catch (error) {
-      console.log(error.message);
+      debug.error(error.message);
     }
   };
 
@@ -107,7 +108,7 @@ export default function CommentSection({ postId }) {
         setComments(comments.filter((comment) => comment._id !== commentId));
       }
     } catch (error) {
-      console.log(error.message);
+      debug.error(error.message);
     }
   };
   return (

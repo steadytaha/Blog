@@ -182,7 +182,7 @@ export default function ModernCreatePost() {
         setPublishError(data.message);
       } else {
         setPublishSuccess('Post created successfully!');
-        setTimeout(() => navigate(`/post/${data.slug}`), 2000);
+        setTimeout(() => navigate(`/modern-post/${data.slug}`), 2000);
       }
     } catch (error) {
       setPublishError('Post creation failed');

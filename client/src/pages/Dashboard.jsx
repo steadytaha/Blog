@@ -7,6 +7,7 @@ import DashPosts from '../components/DashPosts.jsx';
 import DashUsers from '../components/DashUsers.jsx';
 import DashComments from '../components/DashComments.jsx';
 import DashboardComp from '../components/DashboardComp.jsx';
+import DashChatbot from '../components/DashChatbot.jsx';
 
 export default function Dashboard() {
   const location = useLocation();
@@ -33,6 +34,8 @@ export default function Dashboard() {
       {tab === 'users' && <DashUsers />}
       {/* Comments */}
       {tab === 'comments' && <DashComments />}
+      {/* Chatbot Analytics */}
+      {tab === 'chatbot' && <DashChatbot />}
       {/* Dashboard */}
       {tab === 'dash' && <DashboardComp />}
     </div>

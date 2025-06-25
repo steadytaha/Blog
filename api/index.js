@@ -8,6 +8,7 @@ import userRoutes from './routes/user.route.js';
 import authRoutes from './routes/auth.route.js';
 import postRoutes from './routes/post.route.js';
 import commentRoutes from './routes/comment.route.js';
+import chatbotRoutes from './routes/chatbot.route.js';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import { logger } from './utils/logger.js';
@@ -73,6 +74,7 @@ app.use('/user', userRoutes);
 app.use('/auth', authLimiter, authRoutes);
 app.use('/post', postRoutes);
 app.use('/comment', commentRoutes);
+app.use('/api/chatbot', chatbotRoutes);
 
 app.use(express.static(path.join(__dirname, '/client/dist')));
 

@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import ModernUserPanel from '../components/ModernUserPanel.jsx';
 import GlobeAnimation from '../components/GlobeAnimation.jsx';
+import ChatbotPanel from '../components/ChatbotPanel.jsx';
 
 export default function ModernHome() {
   const [posts, setPosts] = useState([]);
@@ -295,6 +296,7 @@ export default function ModernHome() {
           </div>
         </div>
       </footer>
+      <ChatbotPanel />
     </div>
   );
 } 

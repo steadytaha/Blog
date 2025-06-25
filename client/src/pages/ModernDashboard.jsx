@@ -8,6 +8,7 @@ import ModernDashPosts from '../components/ModernDashPosts.jsx';
 import ModernDashUsers from '../components/ModernDashUsers.jsx';
 import ModernDashComments from '../components/ModernDashComments.jsx';
 import ModernDashboardComp from '../components/ModernDashboardComp.jsx';
+import ChatbotAnalytics from '../components/ChatbotAnalytics.jsx';
 import { HiOutlineSparkles, HiOutlineSun, HiOutlineMoon } from 'react-icons/hi2';
 import { Link } from 'react-router-dom';
 
@@ -42,6 +43,7 @@ export default function ModernDashboard() {
       case 'posts': return 'Content Management';
       case 'users': return 'User Management';
       case 'comments': return 'Comment Moderation';
+      case 'chatbot': return 'Chatbot Analytics';
       case 'dash': return 'Dashboard Overview';
       default: return 'Dashboard';
     }
@@ -153,6 +155,7 @@ export default function ModernDashboard() {
             {tab === 'posts' && <ModernDashPosts />}
             {tab === 'users' && <ModernDashUsers />}
             {tab === 'comments' && <ModernDashComments />}
+            {tab === 'chatbot' && <ChatbotAnalytics />}
             {tab === 'dash' && <ModernDashboardComp />}
           </div>
         </div>

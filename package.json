@@ -22,7 +22,8 @@
     "express-rate-limit": "^7.5.0",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.3.3"
+    "mongoose": "^8.3.3",
+    "openai": "^5.7.0"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",

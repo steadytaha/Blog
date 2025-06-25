@@ -27,22 +27,30 @@ body {
     }
 }
 
-/* Custom scrollbar for modern design */
-.modern-scrollbar::-webkit-scrollbar {
-    width: 4px;
+/* Custom scrollbar styles */
+.custom-scrollbar > div:first-child::-webkit-scrollbar {
+    width: 8px;
 }
-
-.modern-scrollbar::-webkit-scrollbar-track {
-    background: #111;
+.custom-scrollbar > div:first-child::-webkit-scrollbar-track {
+    background: #f1f1f1;
 }
-
-.modern-scrollbar::-webkit-scrollbar-thumb {
-    background: #333;
-    border-radius: 2px;
+.custom-scrollbar > div:first-child::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
 }
-
-.modern-scrollbar::-webkit-scrollbar-thumb:hover {
+.custom-scrollbar > div:first-child::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+/* Dark theme overrides for scrollbar */
+.dark .custom-scrollbar > div:first-child::-webkit-scrollbar-track {
+    background: #2d3748; /* gray-800 */
+}
+.dark .custom-scrollbar > div:first-child::-webkit-scrollbar-thumb {
+    background: #718096; /* gray-500 */
+}
+.dark .custom-scrollbar > div:first-child::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0; /* gray-400 */
 }
 
 /* Existing styles */

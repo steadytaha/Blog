@@ -23,7 +23,7 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import PrivateRoute from './components/PrivateRoute'
 import AdminPrivateRoute from './components/AdminPrivateRoute'
-import ScrollToTop from './components/ScrollToTop'
+import SmoothScrollbar from './components/SmoothScrollbar';
 
 function AppContent() {
   const location = useLocation();
@@ -38,8 +38,7 @@ function AppContent() {
                       location.pathname.startsWith('/modern-post/');
 
   return (
-    <>
-      <ScrollToTop />
+    <SmoothScrollbar>
       {!isModernPage && <Header />}
       <Routes>
         <Route path="/" element={<ModernHome />} />
@@ -68,7 +67,7 @@ function AppContent() {
         <Route path="/modern-post/:postId" element={<ModernPostPage />} />
       </Routes>
       {!isModernPage && <Footer />}
-    </>
+    </SmoothScrollbar>
   );
 }
 

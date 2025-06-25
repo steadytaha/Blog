@@ -8,7 +8,8 @@ import {
   HiOutlineUser,
   HiOutlineDocumentText,
   HiOutlineChatBubbleBottomCenterText,
-  HiOutlineArrowRightOnRectangle
+  HiOutlineArrowRightOnRectangle,
+  HiOutlineChatBubbleLeftEllipsis
 } from 'react-icons/hi2';
 import { debug } from '../utils/debug';
 
@@ -44,6 +45,11 @@ export default function ModernDashSidebar({ currentTab, isOpen, onClose }) {
       icon: HiOutlineUsers,
       label: 'Users',
       href: '/modern-dashboard?tab=users'
+    }, {
+      key: 'chatbot',
+      icon: HiOutlineChatBubbleLeftEllipsis,
+      label: 'Chatbot Analytics',
+      href: '/modern-dashboard?tab=chatbot'
     }] : []),
     {
       key: 'profile',

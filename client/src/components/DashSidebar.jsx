@@ -1,5 +1,5 @@
 import { Sidebar, SidebarItem, SidebarItemGroup, SidebarItems } from 'flowbite-react';
-import { HiAnnotation, HiArrowSmRight, HiChartPie, HiDocumentText, HiOutlineUserGroup, HiUser } from 'react-icons/hi';
+import { HiAnnotation, HiArrowSmRight, HiChartPie, HiDocumentText, HiOutlineUserGroup, HiUser, HiChatAlt2 } from 'react-icons/hi';
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -50,6 +50,11 @@ export default function DashSidebar() {
                         <Link to='/dashboard?tab=users'>
                             <SidebarItem active={tab === 'users'} icon={HiOutlineUserGroup} as='div'>
                                 Users
+                            </SidebarItem>
+                        </Link>
+                        <Link to='/dashboard?tab=chatbot'>
+                            <SidebarItem active={tab === 'chatbot'} icon={HiChatAlt2} as='div'>
+                                Chatbot Analytics
                             </SidebarItem>
                         </Link>
                     </>

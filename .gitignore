@@ -24,7 +24,6 @@ dist-ssr
 .env
 
 # New additions
-dist
 coverage
 .env.local
 serviceAccountKey.json

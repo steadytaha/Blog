@@ -1,6 +1,6 @@
 import express from 'express';
 import rateLimit from 'express-rate-limit';
-import { verifyUser } from '../utils/verifyUser.js';
+import { verifyUser, verifyUserOptional } from '../utils/verifyUser.js';
 import { chatWithBot, clearChatHistory, getChatbotAnalytics } from '../controllers/chatbot.controller.js';
 import chatbotLogger from '../utils/chatbotLogger.js';
 
@@ -31,8 +31,8 @@ const chatbotRateLimit = rateLimit({
 });
 
 // Apply rate limiting and user verification
-router.post('/', chatbotRateLimit, verifyUser, chatWithBot);
-router.delete('/clear', verifyUser, clearChatHistory);
-router.get('/analytics', verifyUser, getChatbotAnalytics);
+router.post('/', chatbotRateLimit, verifyUserOptional, chatWithBot);
+router.delete('/clear', verifyUserOptional, clearChatHistory);
+router.get('/analytics', verifyUser, getChatbotAnalytics); // Keep admin-only for analytics
 
 export default router; 

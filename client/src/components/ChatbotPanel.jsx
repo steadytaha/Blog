@@ -97,17 +97,6 @@ export default function ChatbotPanel() {
       return;
     }
 
-    if (!currentUser) {
-        const errorMessage = {
-            id: generateMessageId(),
-            text: 'Please sign in to use the chat feature.',
-            sender: 'bot',
-            timestamp: Date.now()
-        };
-        setMessages(prev => [...prev, errorMessage]);
-        return;
-    }
-
     if (!checkRateLimit()) {
       const errorMessage = {
         id: generateMessageId(),

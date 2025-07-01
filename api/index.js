@@ -4,16 +4,27 @@ import dotenv from 'dotenv';
 import helmet from 'helmet';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
+import admin from 'firebase-admin';
+import { loadJsonFile } from './utils/jsonLoader.js';
 import userRoutes from './routes/user.route.js';
 import authRoutes from './routes/auth.route.js';
 import postRoutes from './routes/post.route.js';
 import commentRoutes from './routes/comment.route.js';
 import chatbotRoutes from './routes/chatbot.route.js';
+import notificationRoutes from './routes/notification.route.js';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import { logger } from './utils/logger.js';
 
 dotenv.config();
+
+// Load the service account key from the utils folder
+const serviceAccount = loadJsonFile('./serviceAccountKey.json');
+
+// Initialize Firebase Admin SDK
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
 
 mongoose.connect(process.env.MONGO)
     .then(() => {
@@ -74,6 +85,7 @@ app.use('/user', userRoutes);
 app.use('/auth', authLimiter, authRoutes);
 app.use('/post', postRoutes);
 app.use('/comment', commentRoutes);
+app.use('/notifications', notificationRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 
 app.use(express.static(path.join(__dirname, '/client/dist')));

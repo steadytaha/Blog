@@ -2,6 +2,12 @@
   "name": "client",
   "private": true,
   "version": "0.0.0",
+  "description": "A modern blog application",
+  "author": "Taha Efe Gümüş",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-repo/blog_v2.git"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,9 +18,11 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.4",
+    "date-fns": "^4.1.0",
     "firebase": "^10.11.1",
     "flowbite-react": "^0.9.0",
     "framer-motion": "^12.18.1",
+    "idb": "^8.0.3",
     "lucide-react": "^0.263.1",
     "moment": "^2.30.1",
     "react": "^18.2.0",
@@ -25,6 +33,7 @@
     "react-quill": "^2.0.0",
     "react-redux": "^9.1.2",
     "react-router-dom": "^6.23.0",
+    "recharts": "^3.0.0",
     "redux-persist": "^6.0.0"
   },
   "devDependencies": {
@@ -40,6 +49,7 @@
     "postcss": "^8.4.38",
     "tailwind-scrollbar": "^3.1.0",
     "tailwindcss": "^3.4.3",
-    "vite": "^5.2.0"
+    "vite": "^5.2.0",
+    "vite-plugin-pwa": "^1.0.0"
   }
 }

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { HiOutlineSparkles, HiOutlineCodeBracket, HiOutlineGlobeAlt, HiOutlineFire, HiArrowTopRightOnSquare } from 'react-icons/hi2';
 import { FaGithub, FaReact, FaNodeJs, FaPython, FaJs, FaDatabase, FaJava } from 'react-icons/fa';
 import { SiTailwindcss, SiMongodb, SiExpress, SiFirebase, SiNextdotjs } from 'react-icons/si';
-import { BsToggle2Off } from 'react-icons/bs';
+
 import { useSelector } from 'react-redux';
 import ModernUserPanel from '../components/ModernUserPanel.jsx';
 
@@ -167,33 +167,6 @@ export default function ModernProjects() {
           }}
         ></div>
       </div>
-
-      {/* Switch to Classic Version Toggle */}
-      {currentUser && currentUser.isAdmin && (
-        <div className="absolute top-8 left-8 z-20">
-          <Link 
-            to="/classic-projects" 
-            className={`flex items-center gap-3 px-6 py-3 border rounded-full transition-all duration-300 group ${
-              theme === 'dark' 
-                ? 'bg-gray-900 hover:bg-gray-800 border-gray-700' 
-                : 'bg-white hover:bg-gray-50 border-gray-300 shadow-lg'
-            }`}
-          >
-            <span className={`text-sm font-light group-hover:opacity-100 transition-opacity duration-300 ${
-              theme === 'dark' 
-                ? 'text-gray-300 group-hover:text-white' 
-                : 'text-gray-600 group-hover:text-gray-900'
-            }`}>
-              Switch to Classic
-            </span>
-            <BsToggle2Off className={`text-xl transition-colors duration-300 ${
-              theme === 'dark' 
-                ? 'text-gray-400 group-hover:text-white' 
-                : 'text-gray-500 group-hover:text-gray-900'
-            }`} />
-          </Link>
-        </div>
-      )}
 
       {/* Main Content */}
       <div className="relative z-10">

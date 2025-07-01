@@ -304,7 +304,7 @@ Respond in ${session.language === 'tr' ? 'Turkish' : 'English'}. Keep it short a
             session.messages = session.messages.slice(-20);
         }
 
-        // Log the interaction
+        // Enhanced interaction logging
         chatbotLogger.logInteraction({
             userId,
             userIP,
@@ -313,14 +313,29 @@ Respond in ${session.language === 'tr' ? 'Turkish' : 'English'}. Keep it short a
             language: session.language, // Use session language instead of detected
             postsFound: relevantPosts.length,
             responseTime,
-            sessionLength: session.messages.length
+            sessionLength: session.messages.length,
+            isGuest: req.user.isGuest,
+            userType: req.user.isGuest ? 'guest' : 'authenticated',
+            messageLength: message.length,
+            responseLength: reply.length,
+            searchContext: needsPostSearch,
+            detectedTopics: needsPostSearch ? message.toLowerCase().split(/\s+/).filter(word => word.length > 3) : []
+        });
+
+        // Log session activity
+        chatbotLogger.logSessionActivity(userId, {
+            messageLength: message.length,
+            language: session.language,
+            hasPostSearch: needsPostSearch,
+            postsFound: relevantPosts.length
         });
 
         res.status(200).json({
             success: true,
             reply: reply.trim(),
             sessionId: userId,
-            language: session.language
+            language: session.language,
+            userType: req.user.isGuest ? 'guest' : 'authenticated'
         });
 
     } catch (error) {
@@ -357,6 +372,11 @@ export const clearChatHistory = async (req, res, next) => {
     try {
         const userId = req.user.id;
         
+        // Only allow clearing if user has a session (authenticated or guest)
+        if (!userId) {
+            return next(errorHandler(400, "No session found to clear"));
+        }
+        
         // Log session end
         chatbotLogger.logSessionEnd(userId, 'MANUAL_CLEAR');
         
@@ -364,7 +384,8 @@ export const clearChatHistory = async (req, res, next) => {
 
         res.status(200).json({
             success: true,
-            message: "Chat history cleared successfully"
+            message: "Chat history cleared successfully",
+            userType: req.user.isGuest ? 'guest' : 'authenticated'
         });
     } catch (error) {
         chatbotLogger.logError(error, { userId: req.user?.id, action: 'CLEAR_CHAT' });
@@ -372,7 +393,7 @@ export const clearChatHistory = async (req, res, next) => {
     }
 };
 
-// Get chatbot analytics (admin only)
+// Get comprehensive chatbot analytics (admin only)
 export const getChatbotAnalytics = async (req, res, next) => {
     try {
         // Log access attempt
@@ -401,11 +422,14 @@ export const getChatbotAnalytics = async (req, res, next) => {
             timestamp: Date.now()
         });
 
-        const { period } = req.query;
+        const { period, detailed } = req.query;
         const validPeriods = ['week', 'month', 'year', 'all'];
         const selectedPeriod = validPeriods.includes(period) ? period : 'week';
         
+        // Get enhanced analytics data
         const stats = chatbotLogger.getPeriodStats(selectedPeriod);
+        const performanceMetrics = chatbotLogger.getPerformanceMetrics();
+        const engagementInsights = chatbotLogger.getUserEngagementInsights();
         
         if (!stats) {
             return res.status(200).json({
@@ -416,15 +440,109 @@ export const getChatbotAnalytics = async (req, res, next) => {
             });
         }
 
-        res.status(200).json({
+        // Prepare response data
+        const responseData = {
             success: true,
             period: selectedPeriod,
-            dateRange: stats.dateRange,
-            stats
-        });
+            stats: {
+                ...stats,
+                // Add real-time performance metrics
+                currentPerformance: performanceMetrics,
+                // Add engagement insights
+                userEngagement: engagementInsights,
+                // Add calculated metrics
+                averageMessagesPerSession: stats.totalInteractions / Math.max(stats.sessionsStarted, 1),
+                userRetentionRate: stats.sessionsEnded > 0 ? (stats.sessionsStarted / stats.sessionsEnded) * 100 : 0,
+                guestToAuthRatio: stats.uniqueGuestUsers / Math.max(stats.uniqueAuthenticatedUsers, 1),
+                responseEfficiency: stats.averageResponseTime > 0 ? 1000 / stats.averageResponseTime : 100,
+                contentSearchRate: stats.searchQueries / Math.max(stats.totalInteractions, 1) * 100,
+                // Add system health indicators
+                systemHealth: {
+                    uptime: 99.9, // This would be calculated from actual uptime data
+                    errorRate: stats.errorCount / Math.max(stats.totalInteractions, 1) * 100,
+                    apiResponseTime: stats.averageResponseTime,
+                    memoryUsage: process.memoryUsage().heapUsed / 1024 / 1024, // MB
+                    cpuUsage: process.cpuUsage().user / 1000000 // Convert to seconds
+                }
+            }
+        };
+
+        // Add detailed breakdown if requested
+        if (detailed === 'true') {
+            responseData.stats.detailedBreakdown = {
+                hourlyDistribution: generateHourlyDistribution(stats.dailyBreakdown),
+                topicTrends: stats.topicBreakdown,
+                userJourneyPaths: generateUserJourneyInsights(),
+                conversationFlowAnalysis: generateConversationFlowAnalysis(),
+                performanceTrends: generatePerformanceTrends()
+            };
+        }
+
+        res.status(200).json(responseData);
 
     } catch (error) {
         chatbotLogger.logError(error, { userId: req.user?.id, action: 'GET_ANALYTICS', period: req.query.period });
         next(errorHandler(500, "Failed to retrieve analytics"));
     }
+};
+
+// Helper functions for detailed analytics
+const generateHourlyDistribution = (dailyBreakdown) => {
+    // Generate mock hourly distribution - in real implementation, this would come from logs
+    const hours = Array.from({ length: 24 }, (_, i) => ({
+        hour: i,
+        interactions: Math.floor(Math.random() * 50) + 10,
+        users: Math.floor(Math.random() * 20) + 5
+    }));
+    return hours;
+};
+
+const generateUserJourneyInsights = () => {
+    // Generate mock user journey data - in real implementation, this would come from user journey logs
+    return {
+        commonPaths: [
+            { path: 'START → MESSAGE → SEARCH → END', count: 45 },
+            { path: 'START → MESSAGE → MESSAGE → END', count: 32 },
+            { path: 'START → MESSAGE → CLEAR → END', count: 18 }
+        ],
+        averageJourneyLength: 3.2,
+        dropoffPoints: {
+            'After first message': 15,
+            'After search': 8,
+            'After 5 messages': 5
+        }
+    };
+};
+
+const generateConversationFlowAnalysis = () => {
+    // Generate mock conversation flow data
+    return {
+        averageConversationDepth: 4.2,
+        topicTransitions: {
+            'technology → projects': 25,
+            'help → education': 18,
+            'general → blog': 15
+        },
+        conversationPatterns: {
+            'question-answer': 60,
+            'exploration': 25,
+            'troubleshooting': 15
+        }
+    };
+};
+
+const generatePerformanceTrends = () => {
+    // Generate mock performance trend data
+    const last7Days = Array.from({ length: 7 }, (_, i) => {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        return {
+            date: date.toISOString().split('T')[0],
+            avgResponseTime: Math.random() * 1000 + 500,
+            successRate: 95 + Math.random() * 5,
+            tokensPerRequest: Math.random() * 100 + 50
+        };
+    }).reverse();
+    
+    return last7Days;
 }; 

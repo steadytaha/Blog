@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { HiOutlineSparkles } from 'react-icons/hi2';
-import { BsToggle2Off, BsToggle2On } from 'react-icons/bs';
+
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import ModernUserPanel from '../components/ModernUserPanel.jsx';
@@ -62,33 +62,6 @@ export default function ModernHome() {
       {/* New Globe Animation Background */}
       <GlobeAnimation />
 
-      {/* Switch to Classic Version Toggle */}
-      {currentUser && currentUser.isAdmin && (
-        <div className="absolute top-8 left-8 z-20">
-          <Link 
-            to="/classic" 
-            className={`flex items-center gap-3 px-6 py-3 border rounded-full transition-all duration-300 group ${
-              theme === 'dark' 
-                ? 'bg-gray-900 hover:bg-gray-800 border-gray-700' 
-                : 'bg-white hover:bg-gray-50 border-gray-300 shadow-lg'
-            }`}
-          >
-            <span className={`text-sm font-light group-hover:opacity-100 transition-opacity duration-300 ${
-              theme === 'dark' 
-                ? 'text-gray-300 group-hover:text-white' 
-                : 'text-gray-600 group-hover:text-gray-900'
-            }`}>
-              Switch to Classic
-            </span>
-            <BsToggle2Off className={`text-xl transition-colors duration-300 ${
-              theme === 'dark' 
-                ? 'text-gray-400 group-hover:text-white' 
-                : 'text-gray-500 group-hover:text-gray-900'
-            }`} />
-          </Link>
-        </div>
-      )}
-
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center px-4">
         <motion.div 
@@ -126,7 +99,7 @@ export default function ModernHome() {
             className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8"
           >
             <Link
-              to="/modern-search"
+              to="/search"
               className={`px-6 sm:px-8 py-3 sm:py-4 font-bold text-base sm:text-lg tracking-wide transition-all duration-300 transform hover:scale-105 ${
                 theme === 'dark' 
                   ? 'bg-white text-black hover:bg-gray-200' 
@@ -136,7 +109,7 @@ export default function ModernHome() {
               EXPLORE POSTS
             </Link>
             <Link
-              to="/modern-about"
+              to="/about"
               className={`px-6 sm:px-8 py-3 sm:py-4 border font-bold text-base sm:text-lg tracking-wide transition-all duration-300 ${
                 theme === 'dark' 
                   ? 'border-gray-600 text-gray-300 hover:border-white hover:text-white' 
@@ -202,7 +175,7 @@ export default function ModernHome() {
                       {post.content.replace(/<[^>]*>/g, '').substring(0, 150)}...
                     </p>
                     <Link
-                      to={`/modern-post/${post.slug}`}
+                      to={`/post/${post.slug}`}
                       className={`inline-flex items-center font-mono text-sm transition-colors duration-300 ${
                         theme === 'dark' 
                           ? 'text-white group-hover:text-gray-300'
@@ -218,7 +191,7 @@ export default function ModernHome() {
 
             <div className="text-center mt-20">
               <Link
-                to="/modern-search"
+                to="/search"
                 className={`inline-flex items-center gap-4 px-12 py-4 border font-bold text-lg tracking-wide transition-all duration-300 ${
                   theme === 'dark'
                     ? 'border-gray-600 text-gray-300 hover:border-white hover:text-white'
@@ -254,7 +227,7 @@ export default function ModernHome() {
             <div className="relative">
               <div className="flex items-center justify-center gap-6">
                 <Link
-                  to="/modern-about"
+                  to="/about"
                   className={`w-12 h-12 border rounded-full flex items-center justify-center transition-all duration-300 ${
                     theme === 'dark'
                       ? 'border-gray-700 text-gray-500 hover:text-white hover:border-white'
@@ -264,7 +237,7 @@ export default function ModernHome() {
                   <span className="text-sm font-mono">AB</span>
                 </Link>
                 <Link
-                  to="/modern-projects"
+                  to="/projects"
                   className={`w-12 h-12 border rounded-full flex items-center justify-center transition-all duration-300 ${
                     theme === 'dark'
                       ? 'border-gray-700 text-gray-500 hover:text-white hover:border-white'
@@ -274,7 +247,7 @@ export default function ModernHome() {
                   <span className="text-sm font-mono">PR</span>
                 </Link>
                 <Link
-                  to="/modern-search"
+                  to="/search"
                   className={`w-12 h-12 border rounded-full flex items-center justify-center transition-all duration-300 ${
                     theme === 'dark'
                       ? 'border-gray-700 text-gray-500 hover:text-white hover:border-white'

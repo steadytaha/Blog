@@ -461,7 +461,7 @@ export default function ModernDashProfile() {
 
             {(currentUser.isAdmin || currentUser.role === "writer") && (
               <Link
-                to="/modern-create-post"
+                to="/create-post"
                 className={`flex-1 py-4 px-8 font-bold text-lg rounded-2xl text-center transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 ${
                   theme === 'dark'
                     ? 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg hover:shadow-xl focus:ring-emerald-500/20'

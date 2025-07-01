@@ -11,7 +11,7 @@ import {
   HiOutlineUsers,
   HiOutlineCommandLine
 } from 'react-icons/hi2';
-import { BsToggle2Off } from 'react-icons/bs';
+
 import ModernUserPanel from '../components/ModernUserPanel.jsx';
 
 export default function ModernAbout() {
@@ -58,33 +58,6 @@ export default function ModernAbout() {
       {/* Modern User Panel */}
       <ModernUserPanel />
       
-      {/* Switch to Classic Version Toggle */}
-      {currentUser && currentUser.isAdmin && (
-        <div className="absolute top-8 left-8 z-20">
-          <Link 
-            to="/about" 
-            className={`flex items-center gap-3 px-6 py-3 border rounded-full transition-all duration-300 group ${
-              theme === 'dark' 
-                ? 'bg-gray-900 hover:bg-gray-800 border-gray-700' 
-                : 'bg-white hover:bg-gray-50 border-gray-300 shadow-lg'
-            }`}
-          >
-            <span className={`text-sm font-light group-hover:opacity-100 transition-opacity duration-300 ${
-              theme === 'dark' 
-                ? 'text-gray-300 group-hover:text-white' 
-                : 'text-gray-600 group-hover:text-gray-900'
-            }`}>
-              Switch to Classic
-            </span>
-            <BsToggle2Off className={`text-xl transition-colors duration-300 ${
-              theme === 'dark' 
-                ? 'text-gray-400 group-hover:text-white' 
-                : 'text-gray-500 group-hover:text-gray-900'
-            }`} />
-          </Link>
-        </div>
-      )}
-
       {/* Animated Background Elements */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         {/* Floating Elements */}
@@ -279,7 +252,7 @@ export default function ModernAbout() {
 
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
-              to="/modern-search"
+              to="/search"
               className={`px-8 py-4 font-bold text-lg tracking-wide rounded-2xl transition-all duration-300 transform hover:scale-105 ${
                 theme === 'dark' 
                   ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl' 
@@ -289,7 +262,7 @@ export default function ModernAbout() {
               EXPLORE POSTS
             </Link>
             <Link
-              to="/modern-signin"
+              to="/signin"
               className={`px-8 py-4 border-2 font-bold text-lg tracking-wide rounded-2xl transition-all duration-300 transform hover:scale-105 ${
                 theme === 'dark' 
                   ? 'border-gray-600 text-gray-300 hover:border-white hover:text-white hover:bg-white/5' 

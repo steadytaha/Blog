@@ -71,18 +71,16 @@ export const getUsers = async (req, res, next) => {
         const limit = parseInt(req.query.limit) || 9;
         const sortDirection = req.query.sort === 'asc' ? 1 : -1;
         const users = await User.find()
+        .select('-password')
         .skip(startIndex)
         .limit(limit)
         .sort({createdAt: sortDirection});
-        const usersWithoutPassword = users.map(user => {
-            const { password, ...rest } = user._doc;
-            return rest;
-        });
+        
         const totalUsers = await User.countDocuments();
         const now = new Date();
         const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
         const lastMonthUsers = await User.countDocuments({ createdAt: { $gte: oneMonthAgo } });
-        res.status(200).json({ users: usersWithoutPassword, totalUsers, lastMonthUsers });
+        res.status(200).json({ users: users, totalUsers, lastMonthUsers });
     } catch (error) {
         next(error);
     }
@@ -131,3 +129,44 @@ export const setUserRole = async (req, res, next) => {
       next(error);
     }
 };
+
+export const followUser = async (req, res, next) => {
+    try {
+        const currentUser = await User.findById(req.user.id);
+        const userToFollow = await User.findById(req.params.userId);
+
+        if (!userToFollow) {
+            return next(errorHandler(404, 'User not found'));
+        }
+
+        if (req.user.id === req.params.userId) {
+            return next(errorHandler(400, 'You cannot follow yourself'));
+        }
+
+        const followingIndex = currentUser.following.indexOf(req.params.userId);
+        const followerIndex = userToFollow.followers.indexOf(req.user.id);
+
+        if (followingIndex === -1) {
+            // Follow user
+            currentUser.following.push(req.params.userId);
+            if (followerIndex === -1) { // Should be consistent
+                userToFollow.followers.push(req.user.id);
+            }
+        } else {
+            // Unfollow user
+            currentUser.following.splice(followingIndex, 1);
+            if (followerIndex !== -1) { // Should be consistent
+                userToFollow.followers.splice(followerIndex, 1);
+            }
+        }
+
+        await currentUser.save();
+        await userToFollow.save();
+
+        const { password, ...rest } = currentUser._doc;
+        res.status(200).json(rest);
+
+    } catch (error) {
+        next(error);
+    }
+}

@@ -1,80 +1,41 @@
-import { config } from '../config/env.js';
+const debugMode = import.meta.env.DEV;
 
-class Debug {
-    constructor() {
-        this.isDevelopment = config.IS_DEVELOPMENT;
-        this.isDebugMode = config.DEBUG_MODE;
+const sanitizeForLogging = (data) => {
+    if (typeof data !== 'object' || data === null) {
+        return data;
     }
 
-    log(message, data = null) {
-        if (this.isDevelopment && this.isDebugMode) {
-            // console.log(`[DEBUG] ${new Date().toISOString()} - ${message}`, data);
+    const sanitized = { ...data };
+
+    const sensitiveKeys = ['password', 'token', 'authorization', 'cookie', 'idToken'];
+
+    for (const key in sanitized) {
+        if (sensitiveKeys.includes(key.toLowerCase())) {
+            sanitized[key] = '***REDACTED***';
+        } else if (typeof sanitized[key] === 'object') {
+            sanitized[key] = sanitizeForLogging(sanitized[key]);
         }
     }
 
-    error(message, error = null) {
-        if (this.isDevelopment) {
-            const errorInfo = error ? {
-                message: error.message,
-                stack: error.stack,
-                status: error.status || error.statusCode
-            } : null;
-            
-            // console.error(`[ERROR] ${new Date().toISOString()} - ${message}`, errorInfo);
-        }
-        
-        // In production, send to error tracking service (Sentry, LogRocket, etc.)
-        if (!this.isDevelopment && error) {
-            // TODO: Send to error tracking service
-            // Example: Sentry.captureException(error);
-        }
-    }
-
-    warn(message, data = null) {
-        if (this.isDevelopment) {
-            // console.warn(`[WARN] ${new Date().toISOString()} - ${message}`, data);
-        }
-    }
-
-    info(message, data = null) {
-        if (this.isDevelopment && this.isDebugMode) {
-            // console.info(`[INFO] ${new Date().toISOString()} - ${message}`, data);
-        }
-    }
-
-    // Sanitize sensitive data before logging
-    sanitize(data) {
-        if (!data || typeof data !== 'object') return data;
-        
-        const sensitiveKeys = ['password', 'token', 'secret', 'key', 'auth'];
-        const sanitized = { ...data };
-        
-        Object.keys(sanitized).forEach(key => {
-            if (sensitiveKeys.some(sensitive => key.toLowerCase().includes(sensitive))) {
-                sanitized[key] = '[REDACTED]';
-            }
-        });
-        
-        return sanitized;
-    }
-}
-
-export const debug = new Debug();
-
-// Helper function for API errors
-export const logApiError = (endpoint, error) => {
-    debug.error(`API Error at ${endpoint}`, {
-        status: error.status || error.statusCode,
-        message: error.message,
-        endpoint
-    });
+    return sanitized;
 };
 
-// Helper function for component errors
-export const logComponentError = (componentName, error, props = {}) => {
-    debug.error(`Component Error in ${componentName}`, {
-        component: componentName,
-        error: error.message,
-        props: debug.sanitize(props)
-    });
-}; 
+const debug = {
+    log: (message, ...data) => {
+        if (debugMode) {
+            console.log(`[INFO] ${message}`, ...data.map(d => sanitizeForLogging(d)));
+        }
+    },
+    error: (message, ...data) => {
+        if (debugMode) {
+            console.error(`[ERROR] ${message}`, ...data);
+        }
+    },
+    warn: (message, ...data) => {
+        if (debugMode) {
+            console.warn(`[WARN] ${message}`, ...data.map(d => sanitizeForLogging(d)));
+        }
+    }
+};
+
+export { debug, sanitizeForLogging }; 

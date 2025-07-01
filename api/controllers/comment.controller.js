@@ -1,4 +1,7 @@
 import Comment from '../models/comment.model.js';
+import Post from '../models/post.model.js';
+import { errorHandler } from '../utils/error.js';
+import { createNotification } from './notification.controller.js';
 
 export const createComment = async (req, res, next) => {
   try {
@@ -16,6 +19,23 @@ export const createComment = async (req, res, next) => {
       userId,
     });
     await newComment.save();
+
+    // Create notification for post author when someone comments
+    try {
+      const post = await Post.findById(postId);
+      if (post && post.author) {
+        await createNotification(
+          post.author,
+          req.user.id,
+          'new_comment',
+          postId,
+          newComment._id
+        );
+      }
+    } catch (notificationError) {
+      console.error('Error creating comment notification:', notificationError);
+      // Don't fail the comment creation if notification fails
+    }
 
     res.status(200).json(newComment);
   } catch (error) {
@@ -44,6 +64,23 @@ export const likeComment = async (req, res, next) => {
     if (userIndex === -1) {
       comment.numberOfLikes += 1;
       comment.likes.push(req.user.id);
+      
+      // Create notification for comment author when someone likes their comment
+      try {
+        const post = await Post.findById(comment.postId);
+        if (post) {
+          await createNotification(
+            comment.userId,
+            req.user.id,
+            'like_comment',
+            comment.postId,
+            comment._id
+          );
+        }
+      } catch (notificationError) {
+        console.error('Error creating comment like notification:', notificationError);
+        // Don't fail the like action if notification fails
+      }
     } else {
       comment.numberOfLikes -= 1;
       comment.likes.splice(userIndex, 1);

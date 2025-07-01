@@ -1,4 +1,3 @@
-
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
@@ -27,6 +26,18 @@ const userSchema = new mongoose.Schema({
     role: {
         type: String,
         default: ""
+    },
+    followers: {
+        type: Array,
+        default: []
+    },
+    following: {
+        type: Array,
+        default: []
+    },
+    savedPosts: {
+        type: Array,
+        default: []
     },
 }, { timestamps: true });
 

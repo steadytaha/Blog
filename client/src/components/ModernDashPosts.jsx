@@ -147,7 +147,7 @@ export default function ModernDashPosts() {
               {totalPosts} Posts
             </div>
             <Link
-              to="/modern-create-post"
+              to="/create-post"
               className={`flex items-center gap-2 px-6 py-3 rounded-2xl font-medium transition-all duration-300 transform hover:scale-105 ${
                 theme === 'dark'
                   ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl'
@@ -303,7 +303,7 @@ export default function ModernDashPosts() {
             Start creating amazing content for your audience.
           </p>
           <Link
-            to="/modern-create-post"
+            to="/create-post"
             className={`inline-flex items-center gap-2 px-6 py-3 rounded-2xl font-medium transition-all duration-300 transform hover:scale-105 ${
               theme === 'dark'
                 ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl'

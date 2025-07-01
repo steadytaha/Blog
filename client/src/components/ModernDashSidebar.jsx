@@ -39,35 +39,35 @@ export default function ModernDashSidebar({ currentTab, isOpen, onClose }) {
       key: 'dash',
       icon: HiOutlineChartBarSquare,
       label: 'Overview',
-      href: '/modern-dashboard?tab=dash'
+      href: '/dashboard?tab=dash'
     }, {
       key: 'users',
       icon: HiOutlineUsers,
       label: 'Users',
-      href: '/modern-dashboard?tab=users'
+      href: '/dashboard?tab=users'
     }, {
       key: 'chatbot',
       icon: HiOutlineChatBubbleLeftEllipsis,
       label: 'Chatbot Analytics',
-      href: '/modern-dashboard?tab=chatbot'
+      href: '/dashboard?tab=chatbot'
     }] : []),
     {
       key: 'profile',
       icon: HiOutlineUser,
       label: 'Profile',
-      href: '/modern-dashboard?tab=profile',
+      href: '/dashboard?tab=profile',
       badge: currentUser?.role ? currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1) : (currentUser?.isAdmin ? 'Admin' : 'User')
     },
     ...((currentUser?.isAdmin || currentUser?.role === "writer") ? [{
       key: 'posts',
       icon: HiOutlineDocumentText,
       label: 'Posts',
-      href: '/modern-dashboard?tab=posts'
+      href: '/dashboard?tab=posts'
     }, {
       key: 'comments',
       icon: HiOutlineChatBubbleBottomCenterText,
       label: 'Comments',
-      href: '/modern-dashboard?tab=comments'
+      href: '/dashboard?tab=comments'
     }] : [])
   ];
 

@@ -218,7 +218,7 @@ export default function ModernCommentSection({ postId }) {
             Join the conversation
           </p>
           <Link
-            to="/modern-signin"
+                          to="/signin"
             className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:scale-105 ${
               theme === 'dark' 
                 ? 'bg-blue-600 hover:bg-blue-700 text-white' 

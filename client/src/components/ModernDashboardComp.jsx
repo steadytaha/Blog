@@ -266,9 +266,9 @@ export default function ModernDashboardComp() {
                 </div>
                 <Link
                   to={
-                    stat.title === 'Total Users' ? '/modern-dashboard?tab=users' :
-                    stat.title === 'Total Posts' ? '/modern-dashboard?tab=posts' :
-                    '/modern-dashboard?tab=comments'
+                    stat.title === 'Total Users' ? '/dashboard?tab=users' :
+                    stat.title === 'Total Posts' ? '/dashboard?tab=posts' :
+                    '/dashboard?tab=comments'
                   }
                   className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-lg group ${
                     stat.color === 'blue' ? 'bg-blue-500 hover:bg-blue-600' :
@@ -469,17 +469,17 @@ export default function ModernDashboardComp() {
               <h3 className={`text-xl font-semibold ${
                 theme === 'dark' ? 'text-white' : 'text-gray-900'
               }`}>
-                Top Contributors
-              </h3>
-            </div>
-            <Link
-              to="/modern-dashboard?tab=users"
-              className={`text-sm font-medium transition-colors ${
-                theme === 'dark' 
-                  ? 'text-blue-400 hover:text-blue-300' 
-                  : 'text-blue-600 hover:text-blue-700'
-              }`}
-            >
+                              Top Contributors
+            </h3>
+          </div>
+          <Link
+            to="/dashboard?tab=users"
+            className={`text-sm font-medium transition-colors ${
+              theme === 'dark' 
+                ? 'text-blue-400 hover:text-blue-300' 
+                : 'text-blue-600 hover:text-blue-700'
+            }`}
+          >
               View all →
             </Link>
           </div>
@@ -565,7 +565,7 @@ export default function ModernDashboardComp() {
               Recent Users
             </h3>
             <Link
-              to="/modern-dashboard?tab=users"
+              to="/dashboard?tab=users"
               className={`text-sm font-medium transition-colors ${
                 theme === 'dark' 
                   ? 'text-blue-400 hover:text-blue-300' 
@@ -614,7 +614,7 @@ export default function ModernDashboardComp() {
               Recent Posts
             </h3>
             <Link
-              to="/modern-dashboard?tab=posts"
+                              to="/dashboard?tab=posts"
               className={`text-sm font-medium transition-colors ${
                 theme === 'dark' 
                   ? 'text-blue-400 hover:text-blue-300' 
@@ -663,7 +663,7 @@ export default function ModernDashboardComp() {
               Recent Comments
             </h3>
             <Link
-              to="/modern-dashboard?tab=comments"
+                              to="/dashboard?tab=comments"
               className={`text-sm font-medium transition-colors ${
                 theme === 'dark' 
                   ? 'text-blue-400 hover:text-blue-300' 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import ModernUserPanel from '../components/ModernUserPanel';
 import ModernCommentSection from '../components/ModernCommentSection';
 import ModernPostCard from '../components/ModernPostCard';
@@ -18,12 +18,14 @@ import {
   HiOutlineClipboard,
   HiOutlineXMark
 } from 'react-icons/hi2';
-import { BsToggle2Off } from 'react-icons/bs';
+
 import { FaTwitter, FaFacebook, FaLinkedin, FaWhatsapp } from 'react-icons/fa';
 import { debug } from '../utils/debug';
+import { updateSuccess } from '../redux/user/userSlice';
 
 export default function ModernPostPage() {
   const { postId } = useParams();
+  const dispatch = useDispatch();
   const theme = useSelector((state) => state.theme.theme);
   const currentUser = useSelector((state) => state.user.currentUser);
   const [post, setPost] = useState(null);
@@ -39,6 +41,20 @@ export default function ModernPostPage() {
   const [shareTitle, setShareTitle] = useState('');
   const [sharePlatform, setSharePlatform] = useState('');
   const shareMenuRef = useRef(null);
+
+  useEffect(() => {
+    if (post && currentUser) {
+      setIsLiked(post.likes.includes(currentUser._id));
+      setIsSaved(currentUser.savedPosts.includes(post._id));
+      setLikeCount(post.numberOfLikes);
+    }
+  }, [post, currentUser]);
+
+  useEffect(() => {
+    if (creator && currentUser) {
+      setIsFollowing(currentUser.following.includes(creator._id));
+    }
+  }, [creator, currentUser]);
 
   const fetchPostData = useCallback(async () => {
     try {
@@ -110,17 +126,78 @@ export default function ModernPostPage() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [showShareMenu]);
 
-  const handleLike = () => {
-    setIsLiked(!isLiked);
-    setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
+  const handleLike = async () => {
+    if (!currentUser) {
+      // Handle not logged in case
+      return;
+    }
+    const wasLiked = isLiked;
+    setIsLiked(!wasLiked);
+    setLikeCount(prev => wasLiked ? prev - 1 : prev + 1);
+
+    try {
+      const res = await fetch(`/post/posts/${post._id}/like`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentUser.token}`
+        }
+      });
+      if (!res.ok) {
+        throw new Error('Failed to like post');
+      }
+    } catch (error) {
+      debug.error('Like error:', error);
+      // Revert optimistic update
+      setIsLiked(wasLiked);
+      setLikeCount(prev => wasLiked ? prev - 1 : prev + 1);
+    }
   };
 
-  const handleSave = () => {
-    setIsSaved(!isSaved);
+  const handleSave = async () => {
+    if (!currentUser) {
+      return;
+    }
+    
+    try {
+      const res = await fetch(`/post/posts/${post._id}/save`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentUser.token}`
+        },
+      });
+      if (!res.ok) {
+        throw new Error('Failed to save post');
+      }
+      const data = await res.json();
+      dispatch(updateSuccess(data.user));
+    } catch (error) {
+      debug.error('Save error:', error);
+    }
   };
 
-  const handleFollow = () => {
-    setIsFollowing(!isFollowing);
+  const handleFollow = async () => {
+    if (!currentUser || !creator) {
+      return;
+    }
+    
+    try {
+      const res = await fetch(`/user/users/${creator._id}/follow`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentUser.token}`
+        },
+      });
+      if (!res.ok) {
+        throw new Error('Failed to follow user');
+      }
+      const data = await res.json();
+      dispatch(updateSuccess(data));
+    } catch (error) {
+      debug.error('Follow error:', error);
+    }
   };
 
   const handleShare = (platform) => {
@@ -191,33 +268,6 @@ export default function ModernPostPage() {
         ></div>
       </div>
 
-      {/* Switch to Classic Version Toggle */}
-      {currentUser && currentUser.isAdmin && (
-        <div className="absolute top-8 left-8 z-20">
-          <Link 
-            to={`/post/${postId}`}
-            className={`flex items-center gap-3 px-6 py-3 border rounded-full transition-all duration-300 group ${
-              theme === 'dark' 
-                ? 'bg-gray-900 hover:bg-gray-800 border-gray-700' 
-                : 'bg-white hover:bg-gray-50 border-gray-300 shadow-lg'
-            }`}
-          >
-            <span className={`text-sm font-light group-hover:opacity-100 transition-opacity duration-300 ${
-              theme === 'dark' 
-                ? 'text-gray-300 group-hover:text-white' 
-                : 'text-gray-600 group-hover:text-gray-900'
-            }`}>
-              Switch to Classic
-            </span>
-            <BsToggle2Off className={`text-xl transition-colors duration-300 ${
-              theme === 'dark' 
-                ? 'text-gray-400 group-hover:text-white' 
-                : 'text-gray-500 group-hover:text-gray-900'
-            }`} />
-          </Link>
-        </div>
-      )}
-
       {/* Animated Background Elements */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-20 left-20 animate-pulse">
@@ -246,7 +296,7 @@ export default function ModernPostPage() {
         {/* Back Button */}
         <div className="mb-8">
           <Link
-            to="/modern-search"
+            to="/search"
             className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ${
               theme === 'dark' 
                 ? 'text-gray-400 hover:text-white hover:bg-white/5' 
@@ -265,7 +315,7 @@ export default function ModernPostPage() {
             {post?.category && (
               <div className="mb-6">
                 <Link
-                  to={`/modern-search?category=${post.category}`}
+                  to={`/search?category=${post.category}`}
                   className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105 ${
                     theme === 'dark' 
                       ? 'bg-blue-900/30 text-blue-400 border border-blue-800/50 hover:bg-blue-900/50' 

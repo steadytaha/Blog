@@ -12,7 +12,7 @@ export default function ModernPostCard({ post }) {
   const theme = useSelector((state) => state.theme.theme);
   
   const readingTime = Math.ceil(post.content.length / 1000);
-  const formattedDate = new Date(post.updatedAt).toLocaleDateString('en-US', {
+  const formattedDate = new Date(post.createdAt).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric'
@@ -26,7 +26,7 @@ export default function ModernPostCard({ post }) {
     }`}>
       {/* Image Section */}
       <div className="relative overflow-hidden">
-        <Link to={`/modern-post/${post.slug}`}>
+        <Link to={`/post/${post.slug}`}>
           <img
             src={post.image}
             alt={post.title}
@@ -38,7 +38,7 @@ export default function ModernPostCard({ post }) {
         {/* Category Badge */}
         <div className="absolute top-4 left-4">
           <Link
-            to={`/modern-search?category=${post.category}`}
+            to={`/search?category=${post.category}`}
             className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105 ${
               theme === 'dark' 
                 ? 'bg-blue-900/80 text-blue-300 border border-blue-800/50' 
@@ -78,7 +78,7 @@ export default function ModernPostCard({ post }) {
         </div>
 
         {/* Title */}
-        <Link to={`/modern-post/${post.slug}`}>
+        <Link to={`/post/${post.slug}`}>
           <h3 className={`text-lg font-bold mb-3 line-clamp-2 transition-colors duration-300 group-hover:text-blue-600 ${
             theme === 'dark' ? 'text-white group-hover:text-blue-400' : 'text-gray-900'
           }`}>
@@ -99,7 +99,7 @@ export default function ModernPostCard({ post }) {
 
         {/* Read More Button */}
         <Link
-          to={`/modern-post/${post.slug}`}
+                      to={`/post/${post.slug}`}
           className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 hover:scale-105 group/btn ${
             theme === 'dark' 
               ? 'bg-blue-900/30 hover:bg-blue-900/50 text-blue-400 border border-blue-800/50' 

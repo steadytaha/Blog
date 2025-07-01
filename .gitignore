@@ -22,3 +22,8 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# New additions
+coverage
+.env.local
+serviceAccountKey.json

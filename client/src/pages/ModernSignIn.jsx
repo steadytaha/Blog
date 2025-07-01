@@ -10,7 +10,7 @@ import {
   HiOutlineLockClosed,
   HiOutlineArrowRight
 } from 'react-icons/hi2';
-import { BsToggle2Off } from 'react-icons/bs';
+
 import { AiFillGoogleCircle } from 'react-icons/ai';
 import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
 import app from '../firebase';
@@ -62,21 +62,22 @@ export default function ModernSignIn() {
     provider.setCustomParameters({ prompt: 'select_account' });
     try {
       const resultsFromGoogle = await signInWithPopup(auth, provider);
+      const idToken = await resultsFromGoogle.user.getIdToken();
       const res = await fetch('/auth/google', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          name: resultsFromGoogle.user.displayName,
-          email: resultsFromGoogle.user.email,
-          photo: resultsFromGoogle.user.photoURL 
+          token: idToken
         })
       });
       const data = await res.json();
       if (res.ok) {
         dispatch(signInSuccess(data));
         navigate('/');
+      } else {
+        dispatch(signInFailure(data.message || 'Could not sign in with Google'));
       }
     } catch (error) {
       dispatch(signInFailure(error.message));
@@ -92,33 +93,6 @@ export default function ModernSignIn() {
       {/* Modern User Panel */}
       <ModernUserPanel />
       
-      {/* Switch to Classic Version Toggle */}
-      {currentUser && currentUser.isAdmin && (
-        <div className="absolute top-8 left-8 z-20">
-          <Link 
-            to="/signin" 
-            className={`flex items-center gap-3 px-6 py-3 border rounded-full transition-all duration-300 group ${
-              theme === 'dark' 
-                ? 'bg-gray-900 hover:bg-gray-800 border-gray-700' 
-                : 'bg-white hover:bg-gray-50 border-gray-300 shadow-lg'
-            }`}
-          >
-            <span className={`text-sm font-light group-hover:opacity-100 transition-opacity duration-300 ${
-              theme === 'dark' 
-                ? 'text-gray-300 group-hover:text-white' 
-                : 'text-gray-600 group-hover:text-gray-900'
-            }`}>
-              Switch to Classic
-            </span>
-            <BsToggle2Off className={`text-xl transition-colors duration-300 ${
-              theme === 'dark' 
-                ? 'text-gray-400 group-hover:text-white' 
-                : 'text-gray-500 group-hover:text-gray-900'
-            }`} />
-          </Link>
-        </div>
-      )}
-
       {/* Animated Background Elements */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-20 left-20 animate-pulse">
@@ -349,7 +323,7 @@ export default function ModernSignIn() {
                   }`}>
                     Don't have an account?{' '}
                     <Link 
-                      to="/modern-signup" 
+                      to="/signup" 
                       className={`font-semibold transition-colors ${
                         theme === 'dark' 
                           ? 'text-blue-400 hover:text-blue-300' 

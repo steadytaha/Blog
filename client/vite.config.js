@@ -5,10 +5,6 @@ import { VitePWA } from 'vite-plugin-pwa'
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
-    headers: {
-      'Content-Security-Policy': "script-src 'self' https://apis.google.com https://*.googleapis.com https://*.gstatic.com",
-      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups'
-    },
     proxy: {
       '/auth': {
         target: 'http://localhost:3001',

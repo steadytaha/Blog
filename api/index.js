@@ -53,16 +53,6 @@ app.use(cors({
     optionsSuccessStatus: 200
 }));
 
-app.use((req, res, next) => {
-    res.setHeader(
-      'Content-Security-Policy',
-      "script-src 'self' https://apis.google.com https://*.googleapis.com https://*.gstatic.com; " +
-      "frame-src 'self' https://*.google.com https://*.firebaseapp.com; " +
-      "connect-src 'self' https://*.googleapis.com https://*.google.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com"
-    );
-    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
-    next();
-  });
 
 // Rate limiting
 const generalLimiter = rateLimit({

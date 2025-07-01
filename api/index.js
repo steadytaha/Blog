@@ -41,7 +41,7 @@ const app = express();
 
 // Security middleware
 app.use(helmet({
-    contentSecurityPolicy: true, // Disable for development, enable in production
+    contentSecurityPolicy: false, // Disable for development, enable in production
     crossOriginEmbedderPolicy: false
 }));
 

@@ -24,7 +24,9 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.3",
-    "openai": "^5.7.0"
+    "openai": "^5.7.0",
+    "winston": "^3.13.1",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",

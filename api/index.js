@@ -19,7 +19,7 @@ import { logger } from './utils/logger.js';
 dotenv.config();
 
 // Load the service account key from the utils folder
-const serviceAccount = loadJsonFile('./serviceAccountKey.json');
+const serviceAccount = loadJsonFile();
 
 // Initialize Firebase Admin SDK
 admin.initializeApp({

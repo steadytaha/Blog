@@ -3,8 +3,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 export function loadJsonFile(filePath) {
-  const __dirname = path.dirname(fileURLToPath(import.meta.url));
-  const absolutePath = path.resolve(__dirname, filePath);
+  // Resolve path from the project root (assuming the script is run from the project root)
+  const absolutePath = path.resolve(process.cwd(), 'serviceAccountKey.json');
   
   try {
     const fileContent = fs.readFileSync(absolutePath, 'utf8');

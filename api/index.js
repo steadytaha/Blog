@@ -39,11 +39,73 @@ const __dirname = path.resolve();
 
 const app = express();
 
-// Security middleware
+// FIX 1: Enable trust proxy for Render (MUST be before rate limiting)
+app.set('trust proxy', true);
+
+// FIX 2: Configure helmet with proper CSP for Firebase Auth
 app.use(helmet({
-    contentSecurityPolicy: false, // Disable for development, enable in production
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: [
+                "'self'",
+                "'unsafe-inline'",
+                "'unsafe-eval'",
+                "https://apis.google.com",
+                "https://*.googleapis.com",
+                "https://*.gstatic.com",
+                "https://www.google.com",
+                "https://www.googletagmanager.com"
+            ],
+            styleSrc: [
+                "'self'",
+                "'unsafe-inline'",
+                "https://fonts.googleapis.com",
+                "https://*.googleapis.com"
+            ],
+            fontSrc: [
+                "'self'",
+                "https://fonts.gstatic.com"
+            ],
+            imgSrc: [
+                "'self'",
+                "data:",
+                "blob:",
+                "https://*.googleapis.com",
+                "https://*.gstatic.com",
+                "https://*.google.com",
+                "https://*.googleusercontent.com"
+            ],
+            connectSrc: [
+                "'self'",
+                "https://*.googleapis.com",
+                "https://*.google.com",
+                "https://identitytoolkit.googleapis.com",
+                "https://securetoken.googleapis.com",
+                "https://*.firebaseio.com",
+                "wss://*.firebaseio.com",
+                "https://*.firebaseapp.com"
+            ],
+            frameSrc: [
+                "'self'",
+                "https://*.google.com",
+                "https://*.firebaseapp.com"
+            ],
+            objectSrc: ["'none'"],
+            baseUri: ["'self'"],
+            formAction: ["'self'"],
+            frameAncestors: ["'self'"],
+            upgradeInsecureRequests: []
+        }
+    },
     crossOriginEmbedderPolicy: false
 }));
+
+// FIX 3: Add Cross-Origin-Opener-Policy header
+app.use((req, res, next) => {
+    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+    next();
+});
 
 app.use(cors({
     origin: process.env.NODE_ENV === 'production' 
@@ -52,7 +114,6 @@ app.use(cors({
     credentials: true,
     optionsSuccessStatus: 200
 }));
-
 
 // Rate limiting
 const generalLimiter = rateLimit({

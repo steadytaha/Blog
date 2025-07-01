@@ -41,7 +41,7 @@ const app = express();
 
 // Security middleware
 app.use(helmet({
-    contentSecurityPolicy: false, // Disable for development, enable in production
+    contentSecurityPolicy: true, // Disable for development, enable in production
     crossOriginEmbedderPolicy: false
 }));
 
@@ -52,6 +52,11 @@ app.use(cors({
     credentials: true,
     optionsSuccessStatus: 200
 }));
+
+app.use((req, res, next) => {
+    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+    next();
+  });
 
 // Rate limiting
 const generalLimiter = rateLimit({

@@ -32,7 +32,6 @@ export default {
     }
   },
   plugins: [
-    flowbite.plugin(),
-    require('@tailwindcss/line-clamp')
+    flowbite.plugin()
   ],
 }

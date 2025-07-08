@@ -4,6 +4,19 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          ui: ['flowbite-react', 'framer-motion'],
+          utils: ['moment', 'date-fns']
+        }
+      }
+    },
+    chunkSizeWarningLimit: 1000
+  },
   server: {
     proxy: {
       '/api': {
@@ -19,11 +32,18 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
+      workbox: {
+        maximumFileSizeToCacheInBytes: 5000000, // 5MB limit to handle large bundles
+        skipWaiting: true,
+        clientsClaim: true
+      },
       manifest: {
         name: 'Little\'s Blog',
         short_name: 'Little\'s',
         description: 'A modern blog application with offline capabilities.',
         theme_color: '#ffffff',
+        background_color: '#ffffff',
+        display: 'standalone',
         icons: [
           {
             src: 'pwa-192x192.png',

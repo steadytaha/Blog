@@ -8,12 +8,39 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      - key: PORT
+        value: 3001
+      - key: DEBUG_MODE
+        value: false
+      # Add these variables in Render dashboard - DO NOT commit actual values
+      # - key: MONGO
+      #   value: your_mongodb_connection_string
+      # - key: JWT_SECRET
+      #   value: your_secure_jwt_secret_32_chars_minimum
+      # - key: OPENAI_API_KEY
+      #   value: your_openai_api_key
   - type: static_site
     name: littles-blog-client
     env: static
     rootDir: Blog/client
-    buildCommand: npm install && npm run build
+    buildCommand: npm install && npx vite build
     publishDir: dist
+    envVars:
+      - key: VITE_DEBUG_MODE
+        value: false
+      # Add these variables in Render dashboard - DO NOT commit actual values  
+      # - key: VITE_FIREBASE_API_KEY
+      #   value: your_firebase_api_key
+      # - key: VITE_FIREBASE_AUTH_DOMAIN
+      #   value: little-s-blog.firebaseapp.com
+      # - key: VITE_FIREBASE_PROJECT_ID
+      #   value: little-s-blog
+      # - key: VITE_FIREBASE_STORAGE_BUCKET
+      #   value: little-s-blog.appspot.com
+      # - key: VITE_FIREBASE_MESSAGING_SENDER_ID
+      #   value: 575517257106
+      # - key: VITE_FIREBASE_APP_ID
+      #   value: 1:575517257106:web:8120673d63d9fd40a1254b
     routes:
       - type: rewrite
         source: "/*"

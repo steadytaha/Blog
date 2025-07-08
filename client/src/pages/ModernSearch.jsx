@@ -141,7 +141,7 @@ export default function ModernSearch() {
     const fetchPosts = async () => {
       setLoading(true);
       const searchQuery = urlParams.toString();
-      const res = await fetch(`/post/posts?${searchQuery}`);
+      const res = await fetch(`/api/post/posts?${searchQuery}`);
       if (!res.ok) {
         setLoading(false);
         return;
@@ -187,7 +187,7 @@ export default function ModernSearch() {
     const urlParams = new URLSearchParams(location.search);
     urlParams.set('startIndex', startIndex);
     const searchQuery = urlParams.toString();
-    const res = await fetch(`/post/posts?${searchQuery}`);
+    const res = await fetch(`/api/post/posts?${searchQuery}`);
     if (!res.ok) {
       return;
     }

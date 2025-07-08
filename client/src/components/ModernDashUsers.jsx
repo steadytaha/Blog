@@ -25,7 +25,7 @@ export default function ModernDashUsers() {
     const getUsers = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/user/users?startIndex=0&limit=10`);
+        const response = await fetch(`/api/user/users?startIndex=0&limit=10`);
         const data = await response.json();
         if (response.ok) {
           setUsers(data.users);
@@ -60,7 +60,7 @@ export default function ModernDashUsers() {
   const handleShowMore = async () => {
     const startIndex = users.length;
     try {
-      const res = await fetch(`/user/users?startIndex=${startIndex}&limit=10`);
+      const res = await fetch(`/api/user/users?startIndex=${startIndex}&limit=10`);
       const data = await res.json();
       if (res.ok) {
         setUsers((prevUsers) => [...prevUsers, ...data.users]);
@@ -74,7 +74,7 @@ export default function ModernDashUsers() {
   const handleDeleteUser = async () => {
     setShowModal(false);
     try {
-      const res = await fetch(`/user/delete/${userId}`, {
+      const res = await fetch(`/api/user/delete/${userId}`, {
         method: 'DELETE'
       });
       if (res.ok) {
@@ -98,7 +98,7 @@ export default function ModernDashUsers() {
         updateData = { role: 'writer' };
       }
 
-      const res = await fetch(`/user/role/${userId}`, {
+      const res = await fetch(`/api/user/role/${userId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updateData)

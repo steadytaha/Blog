@@ -26,7 +26,7 @@ export default function ModernDashComments() {
       setLoading(true);
       try {
         if (currentUser.isAdmin) {
-          const res = await fetch('/api/comment/getComments');
+          const res = await fetch('/api/comment/getcomments');
           const data = await res.json();
           if (res.ok) {
             setComments(data.comments);
@@ -36,11 +36,11 @@ export default function ModernDashComments() {
             }
           }
         } else if (currentUser.role === 'writer') {
-          const postsRes = await fetch(`/post/posts?author=${currentUser._id}`);
+          const postsRes = await fetch(`/api/post/posts?author=${currentUser._id}`);
           const postData = await postsRes.json();
           if (postsRes.ok) {
             const commentsPromises = postData.posts.map((post) =>
-              fetch(`/comment/getPostComments/${post._id}`).then((res) => res.json())
+              fetch(`/api/comment/getPostComments/${post._id}`).then((res) => res.json())
             );
             const commentsData = await Promise.all(commentsPromises);
             const allComments = commentsData.flatMap((data) => data);
@@ -66,7 +66,7 @@ export default function ModernDashComments() {
     const startIndex = comments.length;
     try {
       const res = await fetch(
-        `/comment/getComments?startIndex=${startIndex}`
+        `/api/comment/getcomments?startIndex=${startIndex}`
       );
       const data = await res.json();
       if (res.ok) {
@@ -84,7 +84,7 @@ export default function ModernDashComments() {
     setShowModal(false);
     try {
       const res = await fetch(
-        `/comment/deleteComment/${commentIdToDelete}`,
+        `/api/comment/deleteComment/${commentIdToDelete}`,
         {
           method: 'DELETE',
         }

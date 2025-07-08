@@ -63,7 +63,7 @@ export default function ModernCommentSection({ postId }) {
   useEffect(() => {
     const getComments = async () => {
       try {
-        const res = await fetch(`/comment/getPostComments/${postId}`);
+        const res = await fetch(`/api/comment/getPostComments/${postId}`);
         if (res.ok) {
           const data = await res.json();
           
@@ -71,7 +71,7 @@ export default function ModernCommentSection({ postId }) {
           const commentsWithUsers = await Promise.all(
             data.map(async (comment) => {
               try {
-                const userRes = await fetch(`/user/${comment.userId}`);
+                const userRes = await fetch(`/api/user/${comment.userId}`);
                 if (userRes.ok) {
                   const userData = await userRes.json();
                   return {
@@ -102,7 +102,7 @@ export default function ModernCommentSection({ postId }) {
         navigate('/signin');
         return;
       }
-      const res = await fetch(`/comment/likeComment/${commentId}`, {
+      const res = await fetch(`/api/comment/likeComment/${commentId}`, {
         method: 'PUT',
       });
       if (res.ok) {
@@ -126,7 +126,7 @@ export default function ModernCommentSection({ postId }) {
 
   const handleEdit = async (commentId, editedContent) => {
     try {
-      const res = await fetch(`/comment/editComment/${commentId}`, {
+      const res = await fetch(`/api/comment/editcomment/${commentId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -156,7 +156,7 @@ export default function ModernCommentSection({ postId }) {
         navigate('/signin');
         return;
       }
-      const res = await fetch(`/comment/deleteComment/${commentId}`, {
+      const res = await fetch(`/api/comment/deletecomment/${commentId}`, {
         method: 'DELETE',
       });
       if (res.ok) {

@@ -59,7 +59,7 @@ export default function ModernPostPage() {
   const fetchPostData = useCallback(async () => {
     try {
       setLoading(true);
-      const postRes = await fetch(`/post/posts?slug=${postId}`);
+      const postRes = await fetch(`/api/post/posts?slug=${postId}`);
       
       if (!postRes.ok) {
         throw new Error('Failed to fetch data');
@@ -136,7 +136,7 @@ export default function ModernPostPage() {
     setLikeCount(prev => wasLiked ? prev - 1 : prev + 1);
 
     try {
-      const res = await fetch(`/post/posts/${post._id}/like`, {
+      const res = await fetch(`/api/post/posts/${post._id}/like`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -160,7 +160,7 @@ export default function ModernPostPage() {
     }
     
     try {
-      const res = await fetch(`/post/posts/${post._id}/save`, {
+      const res = await fetch(`/api/post/posts/${post._id}/save`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -183,7 +183,7 @@ export default function ModernPostPage() {
     }
     
     try {
-      const res = await fetch(`/user/users/${creator._id}/follow`, {
+      const res = await fetch(`/api/user/users/${creator._id}/follow`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

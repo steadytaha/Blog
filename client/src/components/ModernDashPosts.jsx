@@ -27,7 +27,7 @@ export default function ModernDashPosts() {
       setLoading(true);
       if(currentUser.isAdmin) {
         try {
-          const response = await fetch(`/post/posts?startIndex=0&limit=10`);
+          const response = await fetch(`/api/post/posts?startIndex=0&limit=10`);
           const data = await response.json();
           if (response.ok) {
             setUserPosts(data.posts);
@@ -39,7 +39,7 @@ export default function ModernDashPosts() {
         }
       } else if (currentUser.role === "writer") {
         try {
-          const response = await fetch(`/post/posts?author=${currentUser._id}`);
+          const response = await fetch(`/api/post/posts?author=${currentUser._id}`);
           const data = await response.json();
           if (response.ok) {
             setUserPosts(data.posts);
@@ -61,7 +61,7 @@ export default function ModernDashPosts() {
   const handleShowMore = async () => {
     const startIndex = userPosts.length;
     try {
-      const res = await fetch(`/post/posts?startIndex=${startIndex}&limit=10`);
+      const res = await fetch(`/api/post/posts?startIndex=${startIndex}&limit=10`);
       const data = await res.json();
       if (res.ok) {
         setUserPosts((prevPosts) => [...prevPosts, ...data.posts]);
@@ -75,7 +75,7 @@ export default function ModernDashPosts() {
   const handleDeletePost = async () => {
     setShowModal(false);
     try {
-      const res = await fetch(`/post/delete/${postId}/${currentUser._id}`, {
+      const res = await fetch(`/api/post/delete/${postId}/${currentUser._id}`, {
         method: 'DELETE'
       });
       if (res.ok) {

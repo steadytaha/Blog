@@ -82,7 +82,7 @@ export default function ModernUserPanel() {
   // Mark specific notification as read
   const handleMarkNotificationRead = async (notificationId) => {
     try {
-      const res = await fetch(`/notifications/${notificationId}/read`, {
+      const res = await fetch(`/api/notifications/${notificationId}/read`, {
         method: 'PUT',
       });
       if (res.ok) {

@@ -75,7 +75,8 @@ app.use(helmet({
                 "https://*.googleapis.com",
                 "https://*.gstatic.com",
                 "https://*.google.com",
-                "https://*.googleusercontent.com"
+                "https://*.googleusercontent.com",
+                "https://cdn.pixabay.com"
             ],
             connectSrc: [
                 "'self'",

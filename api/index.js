@@ -41,7 +41,7 @@ const __dirname = path.resolve();
 
 const app = express();
 
-app.set('trust proxy', false);
+app.set('trust proxy', true);
 
 // FIX 2: Configure helmet with proper CSP for Firebase Auth
 app.use(helmet({

@@ -26,7 +26,7 @@ export default function ModernDashComments() {
       setLoading(true);
       try {
         if (currentUser.isAdmin) {
-          const res = await fetch('/comment/getComments');
+          const res = await fetch('/api/comment/getComments');
           const data = await res.json();
           if (res.ok) {
             setComments(data.comments);

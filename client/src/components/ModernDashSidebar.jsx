@@ -20,7 +20,7 @@ export default function ModernDashSidebar({ currentTab, isOpen, onClose }) {
 
   const handleSignout = async () => {
     try {
-      const res = await fetch('/user/signout', {
+      const res = await fetch('/api/user/signout', {
         method: 'POST',
       });
       const data = await res.json();

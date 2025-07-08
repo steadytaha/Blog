@@ -1,12 +1,13 @@
 import express from 'express';
 import { verifyUser } from '../utils/verifyUser.js';
+import { validatePostCreation } from '../utils/validation.js';
 import { create, getPosts, deletePost, updatePost, getUserPosts, createBulk, likePost, savePost } from '../controllers/post.controller.js';
 
 
 const router = express.Router();
 
-router.post('/create', verifyUser, create);
-router.post('/create-bulk', verifyUser, createBulk);
+router.post('/create', verifyUser, validatePostCreation, create);
+router.post('/create-bulk', verifyUser, validatePostCreation, createBulk);
 router.get('/posts', getPosts);
 router.get('/posts/:id', getUserPosts);
 router.delete('/delete/:postId/:userId', verifyUser, deletePost);

@@ -18,6 +18,13 @@ import ReloadPrompt from './components/ReloadPrompt';
 import OfflineIndicator from './components/OfflineIndicator';
 import { getOfflinePosts, clearOfflinePosts } from './utils/offlineStore';
 import { setOnline, setOffline } from './redux/network/networkSlice';
+import { GameProvider } from './gameLogic/GameContext.jsx';
+import DebugPanel from './components/DebugPanel'; // TEMPORARY: Remove this when debugging is done
+
+// Import debugging utility for development
+if (import.meta.env.DEV) {
+  import('./utils/wordleDebug.js');
+}
 
 async function syncOfflinePosts() {
   const offlinePosts = await getOfflinePosts();
@@ -28,7 +35,7 @@ async function syncOfflinePosts() {
   console.log(`Syncing ${offlinePosts.length} offline posts...`);
 
   try {
-    const response = await fetch('/post/create-bulk', {
+          const response = await fetch('/api/post/create-bulk', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -53,6 +60,7 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<ModernHome />} />
         <Route path="/about" element={<ModernAbout />} />
+        <Route path="/debug" element={<DebugPanel />} /> {/* TEMPORARY: Remove this when debugging is done */}
         <Route path="/signin" element={<ModernSignIn />} />
         <Route path="/signup" element={<ModernSignUp />} />
         <Route path="/search" element={<ModernSearch />} />
@@ -94,10 +102,12 @@ export default function App() {
   }, [dispatch]);
 
   return (
-    <Router>
-      <AppContent />
-      <ReloadPrompt />
-      <OfflineIndicator />
-    </Router>
+    <GameProvider>
+      <Router>
+        <AppContent />
+        <ReloadPrompt />
+        <OfflineIndicator />
+      </Router>
+    </GameProvider>
   )
 }

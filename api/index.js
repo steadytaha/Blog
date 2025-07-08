@@ -12,6 +12,8 @@ import postRoutes from './routes/post.route.js';
 import commentRoutes from './routes/comment.route.js';
 import chatbotRoutes from './routes/chatbot.route.js';
 import notificationRoutes from './routes/notification.route.js';
+import gameSessionRoutes from './routes/gameSession.route.js';
+import wordleWordsRoutes from './routes/wordleWords.route.js';
 import cookieParser from 'cookie-parser';
 import path from 'path';
 import { logger } from './utils/logger.js';
@@ -39,8 +41,7 @@ const __dirname = path.resolve();
 
 const app = express();
 
-// FIX 1: Enable trust proxy for Render (MUST be before rate limiting)
-app.set('trust proxy', true);
+app.set('trust proxy', false);
 
 // FIX 2: Configure helmet with proper CSP for Firebase Auth
 app.use(helmet({
@@ -110,7 +111,7 @@ app.use((req, res, next) => {
 app.use(cors({
     origin: process.env.NODE_ENV === 'production' 
         ? ['https://littles-blog.onrender.com'] 
-        : ['http://localhost:5173', 'http://localhost:3000'],
+        : ['http://localhost:5173', 'http://localhost:3001'],
     credentials: true,
     optionsSuccessStatus: 200
 }));
@@ -118,16 +119,31 @@ app.use(cors({
 // Rate limiting
 const generalLimiter = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
-    max: 100, // limit each IP to 100 requests per windowMs
+    max: 100, // limit each IP to 100 requests per windowMs for non-API routes
     message: 'Too many requests from this IP, please try again later.',
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+// Strict API rate limiting as per security requirements (<5 req/min/IP)
+const apiLimiter = rateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minute
+    max: 50, // limit each IP to 50 API requests per minute
+    message: {
+        success: false,
+        message: 'Too many API requests from this IP, please try again later.'
+    },
     standardHeaders: true,
     legacyHeaders: false,
 });
 
 const authLimiter = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
-    max: 100, // limit each IP to 5 auth requests per windowMs
-    message: 'Too many authentication attempts, please try again later.',
+    max: 50, // limit each IP to 50 auth requests per windowMs
+    message: {
+        success: false,
+        message: 'Too many authentication attempts, please try again later.'
+    },
     standardHeaders: true,
     legacyHeaders: false,
 });
@@ -137,18 +153,24 @@ app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {    
     logger.info(`Server is running on port ${PORT}`);
 });
 
-app.use('/user', userRoutes);
-app.use('/auth', authLimiter, authRoutes);
-app.use('/post', postRoutes);
-app.use('/comment', commentRoutes);
-app.use('/notifications', notificationRoutes);
+// Apply API rate limiting to all /api routes
+app.use('/api', apiLimiter);
+
+// API Routes with specific security requirements
+app.use('/api/user', userRoutes);
+app.use('/api/auth', authLimiter, authRoutes);
+app.use('/api/post', postRoutes);
+app.use('/api/comment', commentRoutes);
+app.use('/api/notifications', notificationRoutes);
 app.use('/api/chatbot', chatbotRoutes);
+app.use('/api/games', gameSessionRoutes);
+app.use('/api/wordle-words', wordleWordsRoutes);
 
 app.use(express.static(path.join(__dirname, '/client/dist')));
 

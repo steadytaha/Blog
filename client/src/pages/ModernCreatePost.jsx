@@ -198,7 +198,7 @@ export default function ModernCreatePost() {
     }
 
     try {
-      const res = await fetch('/post/create', {
+              const res = await fetch('/api/post/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

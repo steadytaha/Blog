@@ -37,7 +37,7 @@ export default function ModernSignIn() {
     }
     try {
       dispatch(signInStart());
-      const res = await fetch('/auth/signin', {
+      const res = await fetch('/api/auth/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -63,7 +63,7 @@ export default function ModernSignIn() {
     try {
       const resultsFromGoogle = await signInWithPopup(auth, provider);
       const idToken = await resultsFromGoogle.user.getIdToken();
-      const res = await fetch('/auth/google', {
+      const res = await fetch('/api/auth/google', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

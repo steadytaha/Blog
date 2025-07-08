@@ -54,7 +54,7 @@ export default function ModernDashboardComp() {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch('/user/users?limit=5');
+      const res = await fetch('/api/user/users?limit=5');
       const data = await res.json();
       if (res.ok) {
         setUsers(data.users);
@@ -68,7 +68,7 @@ export default function ModernDashboardComp() {
 
   const fetchPosts = async () => {
     try {
-      const res = await fetch('/post/posts?limit=5');
+      const res = await fetch('/api/post/posts?limit=5');
       const data = await res.json();
       if (res.ok) {
         setPosts(data.posts);
@@ -82,7 +82,7 @@ export default function ModernDashboardComp() {
 
   const fetchComments = async () => {
     try {
-      const res = await fetch('/comment/getcomments?limit=5');
+      const res = await fetch('/api/comment/getcomments?limit=5');
       const data = await res.json();
       if (res.ok) {
         setComments(data.comments);
@@ -114,8 +114,8 @@ export default function ModernDashboardComp() {
     try {
       // Fetch all posts and comments to calculate likes
       const [postsRes, commentsRes] = await Promise.all([
-        fetch('/post/posts'),
-        fetch('/comment/getcomments')
+        fetch('/api/post/posts'),
+        fetch('/api/comment/getcomments')
       ]);
       
       const postsData = await postsRes.json();

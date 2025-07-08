@@ -152,7 +152,7 @@ export default function ModernDashProfile() {
 
   const handleSignout = async () => {
     try {
-      const res = await fetch('/user/signout', {
+      const res = await fetch('/api/user/signout', {
         method: 'POST',
       });
       const data = await res.json();

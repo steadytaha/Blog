@@ -13,11 +13,13 @@ import {
   HiOutlineBell,
   HiOutlineArrowPath,
   HiOutlineTrash,
-  HiOutlineXMark
+  HiOutlineXMark,
+  HiOutlinePuzzlePiece
 } from 'react-icons/hi2';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { debug } from '../utils/debug';
 import SmoothScrollbar from './SmoothScrollbar';
+import GamesPanel from './games/GamesPanel';
 
 export default function ModernUserPanel() {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -26,6 +28,7 @@ export default function ModernUserPanel() {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isNotificationsOpen, setNotificationsOpen] = useState(false);
+  const [isGamesOpen, setIsGamesOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const scrollbarRef = useRef(null);
@@ -42,7 +45,7 @@ export default function ModernUserPanel() {
     
     setIsLoadingNotifications(true);
     try {
-      const res = await fetch('/notifications?limit=20');
+              const res = await fetch('/api/notifications?limit=20');
       if (res.ok) {
         const data = await res.json();
         setNotifications(data.notifications);
@@ -61,7 +64,7 @@ export default function ModernUserPanel() {
   // Mark all notifications as read
   const handleMarkAllAsRead = async () => {
     try {
-      const res = await fetch('/notifications/read-all', {
+      const res = await fetch('/api/notifications/read-all', {
         method: 'PUT',
       });
       if (res.ok) {
@@ -140,7 +143,7 @@ export default function ModernUserPanel() {
     setHasUnread(false);
 
     try {
-      const res = await fetch('/notifications/delete-all', {
+      const res = await fetch('/api/notifications/delete-all', {
         method: 'DELETE',
       });
 
@@ -216,7 +219,7 @@ export default function ModernUserPanel() {
 
   const handleSignout = async () => {
     try {
-      const res = await fetch('/user/signout', {
+      const res = await fetch('/api/user/signout', {
         method: 'POST',
       });
       const data = await res.json();
@@ -247,6 +250,12 @@ export default function ModernUserPanel() {
     } else if (!newState) {
       scrollbarRef.current?.scrollTop(0);
     }
+  };
+
+  const handleGamesToggle = () => {
+    setIsGamesOpen(!isGamesOpen);
+    if (isOpen) setIsOpen(false);
+    if (isNotificationsOpen) setNotificationsOpen(false);
   };
 
   // Close panels when clicking outside
@@ -585,27 +594,6 @@ export default function ModernUserPanel() {
 
             {/* Navigation Links */}
             <div className="space-y-2 mb-4">
-              <Link
-                to="/dashboard?tab=profile"
-                onClick={() => setIsOpen(false)}
-                className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-300 group ${
-                  theme === 'dark' 
-                    ? 'hover:bg-gray-900' 
-                    : 'hover:bg-gray-200'
-                }`}
-              >
-                <HiOutlineCog6Tooth className={`text-xl transition-colors ${
-                  theme === 'dark' 
-                    ? 'text-gray-400 group-hover:text-white' 
-                    : 'text-gray-600 group-hover:text-gray-900'
-                }`} />
-                <span className={`transition-colors ${
-                  theme === 'dark' 
-                    ? 'text-gray-300 group-hover:text-white' 
-                    : 'text-gray-700 group-hover:text-gray-900'
-                }`}>Settings</span>
-              </Link>
-
               {(currentUser.isAdmin || currentUser.role === "writer") && (
                 <Link
                   to="/create-post"
@@ -628,6 +616,47 @@ export default function ModernUserPanel() {
                   }`}>Create Post</span>
                 </Link>
               )}
+
+              <button
+                onClick={handleGamesToggle}
+                className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-300 group ${
+                  theme === 'dark' 
+                    ? 'hover:bg-gray-900' 
+                    : 'hover:bg-gray-200'
+                }`}
+              >
+                <HiOutlinePuzzlePiece className={`text-xl transition-colors ${
+                  theme === 'dark' 
+                    ? 'text-gray-400 group-hover:text-white' 
+                    : 'text-gray-600 group-hover:text-gray-900'
+                }`} />
+                <span className={`transition-colors ${
+                  theme === 'dark' 
+                    ? 'text-gray-300 group-hover:text-white' 
+                    : 'text-gray-700 group-hover:text-gray-900'
+                }`}>Games</span>
+              </button>
+
+              <Link
+                to="/dashboard?tab=profile"
+                onClick={() => setIsOpen(false)}
+                className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-300 group ${
+                  theme === 'dark' 
+                    ? 'hover:bg-gray-900' 
+                    : 'hover:bg-gray-200'
+                }`}
+              >
+                <HiOutlineCog6Tooth className={`text-xl transition-colors ${
+                  theme === 'dark' 
+                    ? 'text-gray-400 group-hover:text-white' 
+                    : 'text-gray-600 group-hover:text-gray-900'
+                }`} />
+                <span className={`transition-colors ${
+                  theme === 'dark' 
+                    ? 'text-gray-300 group-hover:text-white' 
+                    : 'text-gray-700 group-hover:text-gray-900'
+                }`}>Settings</span>
+              </Link>
 
               {currentUser.isAdmin && (
                 <Link
@@ -678,6 +707,11 @@ export default function ModernUserPanel() {
           </div>
         </div>
       </div>
+
+      {/* Games Panel */}
+      {isGamesOpen && (
+        <GamesPanel onClose={() => setIsGamesOpen(false)} />
+      )}
     </div>
   );
 } 

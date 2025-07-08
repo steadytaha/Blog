@@ -8,7 +8,9 @@
     "dev": "nodemon api/index.js",
     "start": "node api/index.js",
     "build": "npm install && npm install --prefix client && npm run build --prefix client",
-    "dev:all": "concurrently \"npm run dev\" \"npm run dev --prefix client\""
+    "dev:all": "concurrently \"npm run dev\" \"npm run dev --prefix client\"",
+    "migrate:words": "node migrate-words.js",
+    "migrate:words:force": "node migrate-words.js --force"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +27,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.3",
     "openai": "^5.7.0",
+    "puppeteer": "^24.11.2",
     "winston": "^3.13.1",
     "winston-daily-rotate-file": "^5.0.0"
   },

@@ -41,7 +41,7 @@ export default function ModernDashUsers() {
 
     const getTotalUsersCount = async () => {
       try {
-        const response = await fetch('/user/users?countOnly=true');
+        const response = await fetch('/api/user/users?countOnly=true');
         const data = await response.json();
         if (response.ok && data.totalUsers) {
           setTotalUsers(data.totalUsers);

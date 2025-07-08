@@ -2,6 +2,7 @@ import OpenAI from 'openai';
 import Post from '../models/post.model.js';
 import { errorHandler } from '../utils/error.js';
 import chatbotLogger from '../utils/chatbotLogger.js';
+import { debugServer } from '../utils/debug.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -398,12 +399,12 @@ export const getChatbotAnalytics = async (req, res, next) => {
     try {
         // Log access attempt
         const userIP = req.ip || req.connection.remoteAddress;
-        console.log(`Analytics access attempt by user ${req.user?.id} from IP ${userIP}`);
+        debugServer.log(`Analytics access attempt by user ${req.user?.id} from IP ${userIP}`);
         
         // Check if user is admin
         if (!req.user.isAdmin) {
             // Log unauthorized access attempt
-            console.warn(`⚠️ Unauthorized analytics access attempt by user ${req.user.id} (${req.user.email}) from IP ${userIP}`);
+            debugServer.log(`⚠️ Unauthorized analytics access attempt by user ${req.user.id} (${req.user.email}) from IP ${userIP}`);
             chatbotLogger.logError(new Error('Unauthorized analytics access'), { 
                 userId: req.user.id, 
                 userEmail: req.user.email,
@@ -414,7 +415,7 @@ export const getChatbotAnalytics = async (req, res, next) => {
         }
 
         // Log successful admin access
-        console.log(`✅ Admin analytics access granted to user ${req.user.id} from IP ${userIP}`);
+        debugServer.log(`✅ Admin analytics access granted to user ${req.user.id} from IP ${userIP}`);
         chatbotLogger.logAnalytics({
             event: 'ADMIN_ANALYTICS_ACCESS',
             userId: req.user.id,

@@ -71,7 +71,7 @@ export default function ModernSignUp() {
     try {
       setLoading(true);
       setErrorMessage(null);
-      const res = await fetch('/auth/signup', {
+              const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -99,7 +99,7 @@ export default function ModernSignUp() {
     try {
       const resultsFromGoogle = await signInWithPopup(auth, provider);
       const idToken = await resultsFromGoogle.user.getIdToken();
-      const res = await fetch('/auth/google', {
+              const res = await fetch('/api/auth/google', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -30,7 +30,7 @@ export default function ModernCommentSection({ postId }) {
       return;
     }
     try {
-      const res = await fetch('/comment/create', {
+      const res = await fetch('/api/comment/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

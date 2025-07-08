@@ -18,7 +18,7 @@ export default function OAuth() {
             const resultsFromGoogle = await signInWithPopup(auth, provider)
             const idToken = await resultsFromGoogle.user.getIdToken();
             debug.log('ID Token:', { idToken });
-            const res = await fetch('/auth/google', {
+            const res = await fetch('/api/auth/google', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

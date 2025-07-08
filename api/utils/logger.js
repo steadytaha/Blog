@@ -1,12 +1,12 @@
+import { debugServer, sanitizeForLogging } from './debug.js';
+
 class Logger {
     constructor() {
         this.isDevelopment = process.env.NODE_ENV !== 'production';
     }
 
     info(message, meta = {}) {
-        if (this.isDevelopment) {
-            console.log(`[INFO] ${new Date().toISOString()} - ${message}`, meta);
-        }
+        debugServer.log(message, meta);
     }
 
     error(message, error = null, meta = {}) {
@@ -16,23 +16,18 @@ class Logger {
             ...meta 
         } : meta;
         
-        if (this.isDevelopment) {
-            console.error(`[ERROR] ${new Date().toISOString()} - ${message}`, errorInfo);
-        }
-        
-        // In production, you would send this to a logging service
-        // like Winston, or a cloud service like LogRocket, Sentry, etc.
+        debugServer.error(message, error || new Error(message));
     }
 
     warn(message, meta = {}) {
         if (this.isDevelopment) {
-            console.warn(`[WARN] ${new Date().toISOString()} - ${message}`, meta);
+            debugServer.log(`[WARN] ${message}`, meta);
         }
     }
 
     debug(message, meta = {}) {
-        if (this.isDevelopment && process.env.DEBUG === 'true') {
-            console.debug(`[DEBUG] ${new Date().toISOString()} - ${message}`, meta);
+        if (this.isDevelopment && process.env.DEBUG_MODE === 'true') {
+            debugServer.log(`[DEBUG] ${message}`, meta);
         }
     }
 }

@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import ModernUserPanel from '../components/ModernUserPanel.jsx';
 import GlobeAnimation from '../components/GlobeAnimation.jsx';
 import ChatbotPanel from '../components/ChatbotPanel.jsx';
+import { debug } from '../utils/debug.js';
 
 export default function ModernHome() {
   const [posts, setPosts] = useState([]);
@@ -17,13 +18,13 @@ export default function ModernHome() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await fetch('/api/post/getposts');
+        const res = await fetch('/api/post/posts');
         const data = await res.json();
         if (res.ok) {
           setPosts(data.posts);
         }
       } catch (error) {
-        console.error(error);
+        debug.error('Failed to fetch posts:', error);
       }
     };
     fetchPosts();

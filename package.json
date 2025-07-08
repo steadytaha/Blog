@@ -10,7 +10,13 @@
     "build": "npm install && npm install --prefix client && npm run build --prefix client",
     "dev:all": "concurrently \"npm run dev\" \"npm run dev --prefix client\"",
     "migrate:words": "node migrate-words.js",
-    "migrate:words:force": "node migrate-words.js --force"
+    "migrate:words:force": "node migrate-words.js --force",
+    "clean": "rm -rf node_modules client/node_modules client/dist client/.vite",
+    "clean:build": "npm run clean && npm install && npm install --prefix client && npm run build --prefix client",
+    "preview": "npm run build && npm run preview --prefix client",
+    "clean:cache": "npm cache clean --force && npm run clean:cache --prefix client",
+    "rebuild": "npm run clean:cache && npm run clean:build",
+    "production:build": "NODE_ENV=production npm run clean:build"
   },
   "keywords": [],
   "author": "",

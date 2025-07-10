@@ -72,7 +72,7 @@ class WordleCache {
         try {
             debug.log('Fetching words from API...');
             
-            const response = await fetch('/wordle-words/all', {
+            const response = await fetch('/api/wordle-words/all', {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
